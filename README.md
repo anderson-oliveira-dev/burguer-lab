@@ -253,13 +253,17 @@ Caso não queira mais usar o phpMyAdmin, você pode removê‑lo do `docker-comp
 
 ```bash
 docker-compose stop phpmyadmin
+```
+
+<hr>
 
 ### 🌿 Próximos passos – Branches para frontend
 
 Este repositório foi criado para servir como base para outros projetos. Você pode criar branches separadas para adicionar diferentes frontends:
 
 <ul> 
-    <li><strong><code>feature/vue</code></strong> – Adicione o Vue.js via Laravel UI ou Inertia.</li> <li><strong><code>feature/react</code></strong> – Adicione o React.js via Laravel UI ou Inertia.</li>
+    <li><strong><code>feature/vue</code></strong> – Adicione o Vue.js via Laravel UI ou Inertia.</li>
+    <li><strong><code>feature/react</code></strong> – Adicione o React.js via Laravel UI ou Inertia.</li>
 </ul>
 
 Exemplo para criar uma branch com Vue:
