@@ -42,6 +42,22 @@ services:
     networks:
       - laravel-network
 
+  # phpMyAdmin - Interface web para gerenciar o MySQL
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: laravel-phpmyadmin
+    ports:
+      - "8081:80"   # Acesse via http://localhost:8081
+    environment:
+      PMA_HOST: mysql          # Nome do serviço MySQL no docker-compose
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      UPLOAD_LIMIT: 100M
+    depends_on:
+      - mysql
+    networks:
+      - laravel-network
+
 # Volumes persistentes
 volumes:
   mysql_data:

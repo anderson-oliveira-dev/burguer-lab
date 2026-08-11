@@ -156,6 +156,8 @@ Você verá a página inicial do Laravel.
     </tr>
 </table>
 
+<hr>
+
 ### 📁 Estrutura de diretórios relevante
 
 ```bash
@@ -170,6 +172,8 @@ laravel-docker-base/
 ├── .env.example                # Modelo para o .env
 └── ... (arquivos do Laravel)
 ```
+
+<hr>
 
 ### 🔐 Credenciais padrão do banco
 
@@ -209,6 +213,47 @@ As credenciais definidas no <code>docker-compose.yml</code> são:
 A porta do MySQL mapeada para o host é <code><strong>3307</strong></code> (para evitar conflitos com um MySQL local).
 Para acessar o banco de fora do container, use <code>localhost:3307</code> com as mesmas credenciais.
 
+<hr>
+
+### 🖥️ phpMyAdmin – Gerenciar o banco de dados
+
+Este ambiente já inclui o **phpMyAdmin** para facilitar a visualização e administração do MySQL via interface web.
+
+### Acesso
+
+1. Com os containers em execução, abra o navegador e acesse:  
+   **[http://localhost:8081](http://localhost:8081)**
+
+2. Na tela de login, preencha os campos com as credenciais padrão:
+
+| Campo       | Valor            |
+|-------------|------------------|
+| **Servidor**| `mysql`          |
+| **Usuário** | `laravel_user`   |
+| **Senha**   | `secret`         |
+
+> 💡 Se preferir usar o usuário `root`, a senha é `root` – mas o usuário `laravel_user` já tem permissões suficientes para o dia a dia.
+
+3. Clique em **"Ir"** ou **"Executar"**.
+
+### Funcionalidades
+
+- Visualizar tabelas, estruturas e dados.
+- Executar consultas SQL diretamente.
+- Exportar/importar bancos de dados (útil para backups).
+- Gerenciar usuários e permissões (se necessário).
+
+### Dica de segurança
+
+Se você alterar as credenciais do MySQL no `docker-compose.yml` ou no `.env`, lembre‑se de atualizar também as variáveis de ambiente do phpMyAdmin (`PMA_HOST`, `PMA_PORT`, etc.) para manter a consistência.
+
+### Parar ou remover o phpMyAdmin (opcional)
+
+Caso não queira mais usar o phpMyAdmin, você pode removê‑lo do `docker-compose.yml` ou pará‑lo sem afetar os demais serviços:
+
+```bash
+docker-compose stop phpmyadmin
+
 ### 🌿 Próximos passos – Branches para frontend
 
 Este repositório foi criado para servir como base para outros projetos. Você pode criar branches separadas para adicionar diferentes frontends:
@@ -226,6 +271,7 @@ docker-compose exec php php artisan ui vue
 npm install && npm run dev
 # commit e push
 ```
+<hr>
 
 ### 🤝 Contribuição
 
