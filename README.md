@@ -1,58 +1,234 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
+  <h1>🐳 Laravel Docker Base</h1>
+  <p>
+    <strong>Repositório base para projetos Laravel com ambiente Dockerizado</strong><br>
+    Nginx + PHP-FPM + MySQL – pronto para desenvolvimento.
+  </p>
+  <p>
+    <img src="https://img.shields.io/badge/PHP-8.4-777BB4?style=flat&logo=php&logoColor=white" alt="PHP 8.4">
+    <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=flat&logo=laravel&logoColor=white" alt="Laravel">
+    <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat&logo=mysql&logoColor=white" alt="MySQL">
+    <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white" alt="Docker">
+    <img src="https://img.shields.io/badge/Nginx-1.27-009639?style=flat&logo=nginx&logoColor=white" alt="Nginx">
+  </p>
+  <p>
+    <img src="https://img.shields.io/github/stars/anderson-oliveira-dev/laravel-docker-base?style=social" alt="Stars">
+    <img src="https://img.shields.io/github/forks/anderson-oliveira-dev/laravel-docker-base?style=social" alt="Forks">
+  </p>
+</div>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+## 📦 Tecnologias utilizadas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<ul>
+  <li><strong>PHP 8.4</strong> (FPM)</li>
+  <li><strong>Nginx</strong> (servidor web)</li>
+  <li><strong>MySQL 8.0</strong></li>
+  <li><strong>Docker</strong> e <strong>Docker Compose</strong></li>
+  <li><strong>Laravel</strong> (última versão)</li>
+</ul>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✅ Pré‑requisitos
 
-## Learning Laravel
+Antes de começar, certifique‑se de ter instalado em sua máquina:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+<ul>
+  <li><a href="https://docs.docker.com/get-docker/" target="_blank">Docker</a> (com Docker Desktop ou Docker Engine)</li>
+  <li><a href="https://docs.docker.com/compose/install/" target="_blank">Docker Compose</a> (já incluso no Docker Desktop)</li>
+  <li><a href="https://git-scm.com/" target="_blank">Git</a></li>
+  <li><a href="https://getcomposer.org/" target="_blank">Composer</a> (opcional, apenas para criar novos projetos)</li>
+</ul>
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 🚀 Como usar
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. Clonar o repositório
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone git@github.com:anderson-oliveira-dev/laravel-docker-base.git
+cd laravel-docker-base
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Configurar o ambiente
 
-## Contributing
+Copie o arquivo de exemplo de variáveis de ambiente:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+cp .env.example .env
+```
 
-## Code of Conduct
+Edite o <code>.env</code> para definir as credenciais do banco. As configurações padrão já estão alinhadas com o <code>docker-compose.yml</code>:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel_user
+DB_PASSWORD=secret
+```
 
-## Security Vulnerabilities
+Nota: Se você alterar as variáveis no .env, lembre‑se de ajustar também as variáveis de ambiente no serviço mysql do <code>docker-compose.yml</code> para manter a consistência.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3. Subir os containers
 
-## License
+```bash
+docker-compose up -d --build
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Isso irá:
+
+<ul>
+    <li>Construir a imagem PHP com todas as extensões necessárias.</li>
+    <li>Baixar as imagens do Nginx e MySQL.</li>
+    <li>Subir os três containers em segundo plano.</li>
+</ul>
+
+### 4. Instalar as dependências do Laravel
+
+```bash
+docker-compose exec php composer install
+```
+
+### 5. Gerar a chave da aplicação
+
+```bash
+docker-compose exec php php artisan key:generate
+```
+
+### 6. Executar as migrações
+
+```bash
+docker-compose exec php php artisan migrate
+```
+
+### 7. Acessar a aplicação
+
+Abra o navegador e acesse:
+<a href="http://localhost:8080" target="_blank"><strong>http://localhost:8080</strong></a>
+
+Você verá a página inicial do Laravel.
+
+<hr>
+
+### 🛠 Comandos úteis
+
+<table>
+    <tr>
+        <th>Ação</th>
+        <th>Comando</th>
+    </tr>
+    <tr>
+        <td>Executar comandos Artisan</td>
+        <td><code>docker-compose exec php php artisan <comando></code></td>
+    </tr>
+    <tr>
+        <td>Executar o Composer</td>
+        <td><code>docker-compose exec php composer (comando) </code></td>
+    </tr>
+    <tr>
+        <td>Acessar o container PHP interativamente</td>
+        <td><code>docker-compose exec php bash</code></td>
+    </tr>
+    <tr>
+        <td>Acessar o MySQL via linha de comando</td>
+        <td><code>docker-compose exec mysql mysql -u laravel_user -p</code> (senha <code>secret</code>)</td>
+    </tr>
+    <tr>
+        <td>Parar os containers</td>
+        <td><code>docker-compose down</code></td>
+    </tr>
+    <tr>
+        <td>Parar e remover volumes (⚠️ apaga dados)</td>
+        <td><code>docker-compose down -v</code></td>
+    </tr>
+    <tr>
+        <td>Visualizar logs</td>
+        <td><code>docker-compose logs -f</code></td>
+    </tr>
+    <tr>
+        <td>Logs de um serviço específico</td>
+        <td><code>docker-compose logs -f php</code> (ou <code>nginx</code>, <code>mysql</code>)</td>
+    </tr>
+</table>
+
+### 📁 Estrutura de diretórios relevante
+
+```bash
+laravel-docker-base/
+├── docker/
+│   ├── nginx/
+│   │   └── default.conf       # Configuração do servidor Nginx
+│   └── php/
+│       └── Dockerfile          # Definição da imagem PHP com extensões
+├── docker-compose.yml          # Orquestração dos containers
+├── .env                        # Variáveis de ambiente (não versionado)
+├── .env.example                # Modelo para o .env
+└── ... (arquivos do Laravel)
+```
+
+### 🔐 Credenciais padrão do banco
+
+As credenciais definidas no <code>docker-compose.yml</code> são:
+
+<table> 
+    <tr> 
+        <th>Variável</th>
+        <th>Valor</th>
+    </tr>
+    <tr>
+        <td><strong>Database</strong></td>
+        <td><code>laravel</code></td>
+    </tr>
+    <tr>
+        <td><strong>Usuário</strong></td>
+        <td><code>laravel_user</code></td>
+    </tr>
+    <tr>
+        <td><strong>Senha</strong></td>
+        <td><code>secret</code></td>
+    </tr>
+    <tr>
+        <td><strong>Root password</strong></td>
+        <td><code>root</code></td>
+    </tr>
+    <tr>
+        <td><strong>Host (interno)</strong></td>
+        <td><code>mysql</code></td>
+    </tr>
+    <tr>
+        <td><strong>Porta (interna)</strong></td>
+        <td><code>3306</code></td>
+    </tr>
+</table>
+
+A porta do MySQL mapeada para o host é <code><strong>3307</strong></code> (para evitar conflitos com um MySQL local).
+Para acessar o banco de fora do container, use <code>localhost:3307</code> com as mesmas credenciais.
+
+### 🌿 Próximos passos – Branches para frontend
+
+Este repositório foi criado para servir como base para outros projetos. Você pode criar branches separadas para adicionar diferentes frontends:
+
+<ul> 
+    <li><strong><code>feature/vue</code></strong> – Adicione o Vue.js via Laravel UI ou Inertia.</li> <li><strong><code>feature/react</code></strong> – Adicione o React.js via Laravel UI ou Inertia.</li>
+</ul>
+
+Exemplo para criar uma branch com Vue:
+
+```bash
+git checkout -b feature/vue
+docker-compose exec php composer require laravel/ui
+docker-compose exec php php artisan ui vue
+npm install && npm run dev
+# commit e push
+```
+
+### 🤝 Contribuição
+
+Sinta‑se à vontade para abrir <a href="https://github.com/anderson-oliveira-dev/laravel-docker-base/issues">issues</a> ou pull requests caso encontre problemas ou tenha sugestões de melhoria.
+
+<div align="center"> <strong>Divirta‑se codando! 🚀</strong> </div>
