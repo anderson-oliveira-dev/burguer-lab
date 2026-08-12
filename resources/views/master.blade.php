@@ -18,6 +18,6 @@
         @endif
     </head>
     <body>
-        <div id="app"></div>
+        <div id="app" class="d-flex flex-column min-vh-100"></div>
     </body>
 </html>
