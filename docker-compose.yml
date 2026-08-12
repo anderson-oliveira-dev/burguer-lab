@@ -9,6 +9,7 @@ services:
     container_name: laravel-php
     volumes:
       - .:/var/www/html
+      - /var/www/html/node_modules
     ports:
     - "5173:5173" # Vite
     networks:
