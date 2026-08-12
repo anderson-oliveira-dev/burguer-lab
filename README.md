@@ -49,8 +49,16 @@ Antes de começar, certifique‑se de ter instalado em sua máquina:
 ### 1. Clonar o repositório
 
 ```bash
-git clone git@github.com:anderson-oliveira-dev/laravel-docker-base.git
+git clone git@github.com:anderson-oliveira-dev/laravel-docker-base.git (nome-do-novo-projeto)
 cd laravel-docker-base
+```
+Atenção, se for um projeto novo, remova o vínculo:
+```bash
+git remote remove origin
+```
+Ou troque a URL:
+```bash
+git remote set-url origin NOVA_URL
 ```
 
 ### 2. Configurar o ambiente
