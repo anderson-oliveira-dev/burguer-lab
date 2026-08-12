@@ -39,4 +39,4 @@ USER www-data
 EXPOSE 9000
 EXPOSE 5173
 
-CMD ["php-fpm", "npm run dev"]
+CMD ["sh", "-c", "php-fpm -D && npm run dev -- --host"]
