@@ -21,6 +21,7 @@
                     </li>
                 </ul>
             </div>
+            <button type="button" class="btn btn-warning">Entrar</button>
         </div>
     </nav>
 
