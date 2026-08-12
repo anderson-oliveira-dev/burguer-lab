@@ -13,9 +13,18 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = ['Tradicional', 'Combo', 'Bebida', 'Acompanhamento'];
+        $categories = [
+            ['name' => 'Tradicional', 'description' => 'Hambúrgueres tradicionais'],
+            ['name' => 'Combo', 'description' => 'Combos com batata e bebida'],
+            ['name' => 'Bebida', 'description' => 'Bebidas diversas'],
+            ['name' => 'Acompanhamento', 'description' => 'Porções e adicionais'],
+        ];
+
         foreach ($categories as $cat) {
-            Category::create(['name' => $cat]);
+            Category::firstOrCreate(
+                ['name' => $cat['name']],
+                ['description' => $cat['description']]
+            );
         }
     }
 }
