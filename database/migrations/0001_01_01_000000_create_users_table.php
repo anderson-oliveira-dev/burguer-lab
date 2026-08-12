@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
+            $table->enum('type', ['client', 'admin'])->default('client');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
