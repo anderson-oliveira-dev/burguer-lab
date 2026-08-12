@@ -11,6 +11,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
+# Instale o Node.js e npm
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
 # Instalar o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -25,7 +29,14 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
+# Cria a pasta de cache do npm com permissão para www-data
+RUN mkdir -p /var/www/.npm \
+    && chown -R www-data:www-data /var/www/.npm
+
 USER www-data
 
+# Expor portas
 EXPOSE 9000
-CMD ["php-fpm"]
+EXPOSE 5173
+
+CMD ["php-fpm", "npm run dev"]
