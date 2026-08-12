@@ -1,8 +1,9 @@
 <template>
     <div id="app">
         <nav>
-            <RouterLink to="/">Produtos</RouterLink>
-            <RouterLink to="/track-order">Acompanhar Pedido</RouterLink>
+            <RouterLink to="/">Início</RouterLink>
+            <RouterLink to="/orders">Pedidos</RouterLink>
+            <RouterLink to="/profile">Perfil</RouterLink>
         </nav>
         <RouterView />
     </div>

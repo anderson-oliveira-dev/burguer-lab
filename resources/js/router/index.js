@@ -1,10 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ProductsList from '../components/products/ProductsList.vue'
-import TrackOrder from '../components/products/TrackOrder.vue'
+
+import Home from '../components/home/Home.vue'
+import Orders from '../components/orders/Orders.vue'
+import Profile from '../components/profile/Profile.vue'
 
 const routes = [
-    { path: '/', name: 'products-list', component: ProductsList },
-    { path: '/track-order', name: 'track-order', component: TrackOrder },
+    { path: '/', redirect: '/home' },
+    { path: '/home', name: 'home', component: Home },
+    { path: '/orders', name: 'orders', component: Orders },
+    { path: '/profile', name: 'profile', component: Profile}
 ]
 
 const router = createRouter({
