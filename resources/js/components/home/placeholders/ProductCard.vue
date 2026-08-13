@@ -1,9 +1,9 @@
 <template>
-    <div class="card" aria-hidden="true">
+    <div class="card h-100" aria-hidden="true">
         <div v-if="image" class="card-img-top" :style="{ backgroundImage: `url(${image})`, backgroundSize: 'cover', height: '200px' }"></div>
         <div v-else class="card-img-top bg-secondary" style="height: 200px;"></div>
 
-        <div class="card-body">
+        <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ title }}</h5>
             <p class="card-text flex-grow-1">{{ description }}</p>
             <p class="card-text"><strong>R$ {{ price.toFixed(2) }}</strong></p>
@@ -45,5 +45,10 @@ export default{
 .card:hover {
     transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.card-img-top {
+    background-size: cover;
+    background-position: center;
+    height: 200px;
 }
 </style>

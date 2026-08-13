@@ -23,7 +23,7 @@ class ProductFactory extends Factory
             'image' => $this->faker->imageUrl(640, 480, 'food'),
             'status' => $this->faker->randomElement(['disponivel', 'esgotado', 'oculto']),
             'price' => $this->faker->randomFloat(2, 10, 50),
-            'description' => $this->faker->paragraph(),
+            'description' => $this->faker->paragraph(1),
             'preparation_time' => $this->faker->numberBetween(10, 45),
         ];
     }
