@@ -20,7 +20,7 @@ class ProductFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->words(2, true),
-            'image' => $this->faker->imageUrl(640, 480, 'food'),
+            'image' => 'https://loremflickr.com/640/480/food?random=' . rand(1, 1000),
             'status' => $this->faker->randomElement(['disponivel', 'esgotado', 'oculto']),
             'price' => $this->faker->randomFloat(2, 10, 50),
             'description' => $this->faker->paragraph(1),
