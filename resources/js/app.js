@@ -1,5 +1,7 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import { useAuthStore } from './components/stores/auth.js';
+
 import App from './components/App.vue';
 import router from './router';
 
@@ -12,3 +14,6 @@ const pinia = createPinia();
 app.use(pinia);
 app.use(router);
 app.mount('#app');
+
+const authStore = useAuthStore();
+authStore.loadToken();

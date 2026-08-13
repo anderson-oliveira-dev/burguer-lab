@@ -21,7 +21,9 @@
                     </li>
                 </ul>
             </div>
-            <button type="button" class="btn btn-warning">Entrar</button>
+            <div>
+                <LoginModal />
+            </div>
         </div>
     </nav>
 
@@ -38,8 +40,13 @@
     </footer>
 </template>
 <script>
+import LoginModal from './login/LoginModal.vue';
+
 export default {
     name: 'App',
+    components: {
+        LoginModal
+    },
     data() {
         return {
             
