@@ -36,9 +36,9 @@ export const useAuthStore = defineStore('auth', {
                 delete axios.defaults.headers.common['Authorization'];
             }
         },
-        async register() {
+        async register(userData) {
             try {
-                await axios.post('/api/register');
+                await axios.post('/api/register', userData);
                 this.user = response.data.user;
                 this.token = response.data.token;
                 this._saveToken();
