@@ -45,6 +45,10 @@ export default {
             loading: false,
             error: null,
             modalInstance: null,
+
+            unwatch: null,
+            onShown: null,
+            onHidden: null
         };
     },
     mounted() {
@@ -52,13 +56,15 @@ export default {
         if (modalEl) {
             this.modalInstance = new Modal(modalEl);
 
-            modalEl.addEventListener('shown.bs.modal', () => {
+            this.onShown = () => {
                 useModalStore().open('login');
-            });
-
-            modalEl.addEventListener('hidden.bs.modal', () => {
+            };
+            this.onHidden = () => {
                 useModalStore().close('login');
-            });
+            };
+
+            modalEl.addEventListener('shown.bs.modal', this.onShown);
+            modalEl.addEventListener('hidden.bs.modal', this.onHidden);
         }
 
         this.unwatch = this.$watch(
@@ -77,8 +83,8 @@ export default {
         if (this.unwatch) this.unwatch();
         const modalEl = document.getElementById('loginModal');
         if (modalEl) {
-            modalEl.removeEventListener('shown.bs.modal');
-            modalEl.removeEventListener('hidden.bs.modal');
+            modalEl.removeEventListener('shown.bs.modal', this.onShown);
+            modalEl.removeEventListener('hidden.bs.modal', this.onHidden);
         }
     },
     methods: {
