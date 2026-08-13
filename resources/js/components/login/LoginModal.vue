@@ -1,7 +1,21 @@
 <template>
     <div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+        <button
+            v-if="!isAuthenticated"
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#loginModal"
+        >
             Entrar
+        </button>
+        <button
+            v-else
+            type="button"
+            class="btn btn-danger"
+            @click="handleLogout"
+        >
+            Sair
         </button>
 
         <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -53,6 +67,12 @@ export default {
             error: null,
         };
     },
+    computed: {
+        isAuthenticated() {
+            const auth = useAuthStore();
+            return auth.isAuthenticated;
+        }
+    },
     methods: {
         async handleLogin() {
             this.loading = true;
@@ -66,6 +86,11 @@ export default {
             } finally {
                 this.loading = false;
             }
+        },
+        async handleLogout() {
+            const authStore = useAuthStore();
+            await authStore.logout();
+            window.location.href = '/';
         },
         goToRegister() {
             const modalEl = document.getElementById('loginModal');
