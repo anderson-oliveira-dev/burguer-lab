@@ -44,7 +44,7 @@
                     <div class="modal-footer">
                         <p class="mb-0">
                             Não tem conta?
-                            <a href="#" @click.prevent="goToRegister">Cadastre-se</a>
+                            <a href="#" @click.prevent="goToRegister()">Cadastre-se</a>
                         </p>
                     </div>
                 </div>
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { Modal } from 'bootstrap';
 import { useAuthStore } from '../stores/auth';
 
 export default {
@@ -94,7 +95,7 @@ export default {
         },
         goToRegister() {
             const modalEl = document.getElementById('loginModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
+            const modal = Modal.getInstance(modalEl);
             if (modal) modal.hide();
             this.$router.push('/register');
         },
