@@ -1,52 +1,32 @@
 <template>
-    <div>
-        <button
-            v-if="!isAuthenticated"
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#loginModal"
-        >
-            Entrar
-        </button>
-        <button
-            v-else
-            type="button"
-            class="btn btn-danger"
-            @click="handleLogout"
-        >
-            Sair
-        </button>
-
-        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form @submit.prevent="handleLogin">
-                            <div class="mb-3">
-                                <label for="loginInput" class="form-label">Email ou Telefone</label>
-                                <input type="text" class="form-control" id="loginInput" v-model="form.login" required />
-                            </div>
-                            <div class="mb-3">
-                                <label for="passwordInput" class="form-label">Senha</label>
-                                <input type="password" class="form-control" id="passwordInput" v-model="form.password" required />
-                            </div>
-                            <button type="submit" class="btn btn-primary" :disabled="loading">
-                                {{ loading ? 'Entrando...' : 'Entrar' }}
-                            </button>
-                            <div v-if="error" class="text-danger mt-2">{{ error }}</div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <p class="mb-0">
-                            Não tem conta?
-                            <a href="#" @click.prevent="goToRegister()">Cadastre-se</a>
-                        </p>
-                    </div>
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form @submit.prevent="handleLogin">
+                        <div class="mb-3">
+                            <label for="loginInput" class="form-label">Email ou Telefone</label>
+                            <input type="text" class="form-control" id="loginInput" v-model="form.login" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="passwordInput" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="passwordInput" v-model="form.password" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary" :disabled="loading">
+                            {{ loading ? 'Entrando...' : 'Entrar' }}
+                        </button>
+                        <div v-if="error" class="text-danger mt-2">{{ error }}</div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <p class="mb-0">
+                        Não tem conta?
+                        <a href="#" @click.prevent="goToRegister">Cadastre-se</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -56,31 +36,62 @@
 <script>
 import { Modal } from 'bootstrap';
 import { useAuthStore } from '../stores/auth';
+import { useModalStore } from '../stores/modal';
 
 export default {
     data() {
         return {
-            form: {
-                login: '',
-                password: '',
-            },
+            form: { login: '', password: '' },
             loading: false,
             error: null,
+            modalInstance: null,
         };
     },
-    computed: {
-        isAuthenticated() {
-            const auth = useAuthStore();
-            return auth.isAuthenticated;
+    mounted() {
+        const modalEl = document.getElementById('loginModal');
+        if (modalEl) {
+            this.modalInstance = new Modal(modalEl);
+
+            modalEl.addEventListener('shown.bs.modal', () => {
+                useModalStore().open('login');
+            });
+
+            modalEl.addEventListener('hidden.bs.modal', () => {
+                useModalStore().close('login');
+            });
+        }
+
+        this.unwatch = this.$watch(
+            () => useModalStore().isOpen('login'),
+            (newVal) => {
+                if (newVal) {
+                    this.modalInstance?.show();
+                } else {
+                    this.modalInstance?.hide();
+                }
+            },
+            { immediate: true }
+        );
+    },
+    beforeUnmount() {
+        if (this.unwatch) this.unwatch();
+        const modalEl = document.getElementById('loginModal');
+        if (modalEl) {
+            modalEl.removeEventListener('shown.bs.modal');
+            modalEl.removeEventListener('hidden.bs.modal');
         }
     },
     methods: {
+        closeModal() {
+            this.modalInstance?.hide();
+        },
         async handleLogin() {
             this.loading = true;
             this.error = null;
             try {
                 const authStore = useAuthStore();
                 await authStore.login(this.form.login, this.form.password);
+                this.closeModal();
                 window.location.href = '/';
             } catch (err) {
                 this.error = 'Credenciais inválidas. Tente novamente.';
@@ -88,17 +99,15 @@ export default {
                 this.loading = false;
             }
         },
-        async handleLogout() {
-            const authStore = useAuthStore();
-            await authStore.logout();
-            window.location.href = '/';
-        },
         goToRegister() {
             const modalEl = document.getElementById('loginModal');
-            const modal = Modal.getInstance(modalEl);
-            if (modal) modal.hide();
-            this.$router.push('/register');
-        },
-    },
+            const handleHidden = () => {
+                modalEl.removeEventListener('hidden.bs.modal', handleHidden);
+                this.$router.push('/register');
+            };
+            modalEl.addEventListener('hidden.bs.modal', handleHidden);
+            this.modalInstance?.hide();
+        }
+    }
 };
 </script>

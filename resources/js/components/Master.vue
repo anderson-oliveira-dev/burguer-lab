@@ -22,7 +22,7 @@
                 </ul>
             </div>
             <div>
-                <LoginModal />
+                <LoginButton />
             </div>
         </div>
     </nav>
@@ -33,6 +33,8 @@
         </div>
     </main>
 
+    <LoginModal />
+
     <footer class="footer mt-auto py-3 text-sm lh-normal">
         <div class="container">
             © 2026 <a href="https://github.com/anderson-oliveira-dev" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover">Anderson Oliveira</a>
@@ -40,11 +42,13 @@
     </footer>
 </template>
 <script>
+import LoginButton from './login/LoginButton.vue';
 import LoginModal from './login/LoginModal.vue';
 
 export default {
     components: {
-        LoginModal
+        LoginModal,
+        LoginButton
     }
 }
 </script>

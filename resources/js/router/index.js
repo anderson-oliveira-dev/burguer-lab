@@ -5,7 +5,7 @@ import Home from '../components/home/Home.vue'
 import Orders from '../components/orders/Orders.vue'
 import Cart from '../components/cart/Cart.vue'
 import Profile from '../components/profile/Profile.vue'
-import Register from '../components/profile/Register.vue'
+import Register from '../components/login/Register.vue'
 
 const routes = [
     {
