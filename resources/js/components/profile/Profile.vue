@@ -3,16 +3,16 @@
         <h1>Perfil</h1>
     </div>
     <div v-else>
-        <LoginModal class="d-flex justify-content-center align-items-center vh-100" />
+        <LoginButton class="d-flex justify-content-center align-items-center vh-100" />
     </div>
 </template>
 <script>
-import LoginModal from '../login/LoginModal.vue';
+import LoginButton from '../login/LoginButton.vue';
 import { useAuthStore } from '../stores/auth';
 
 export default {
     components: {
-        LoginModal
+        LoginButton
     },
     computed: {
         isAuthenticated() {
