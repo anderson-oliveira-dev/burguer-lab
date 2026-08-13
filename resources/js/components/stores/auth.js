@@ -36,6 +36,18 @@ export const useAuthStore = defineStore('auth', {
                 delete axios.defaults.headers.common['Authorization'];
             }
         },
+        async register() {
+            try {
+                await axios.post('/api/register');
+            } catch (error) {
+                console.error('Erro no logout:', error);
+            } finally {
+                this.user = null;
+                this.token = null;
+                localStorage.removeItem('auth_token');
+                delete axios.defaults.headers.common['Authorization'];
+            }
+        },
         loadToken() {
             const token = localStorage.getItem('auth_token');
             if (token) {

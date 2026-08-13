@@ -128,8 +128,8 @@ export default {
                 const authStore = useAuthStore();
                 await authStore.register(this.form);
                 this.$router.push('/');
-            } catch (err) {
-                this.error = err.response?.data?.message || 'Erro ao cadastrar. Tente novamente.';
+            } catch (e) {
+                this.error = e.response?.data?.message || 'Erro ao cadastrar. Tente novamente.';
             } finally {
                 this.loading = false;
             }
