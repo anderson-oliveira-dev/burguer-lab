@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../components/stores/auth.js'
 
 import Master from '../components/Master.vue'
 import Home from '../components/home/Home.vue'
@@ -21,6 +22,10 @@ const routes = [
     },
     { path: '/register', name: 'register', component: Register }
 ];
+
+// Quando tiver páginas que precisam de autenticação
+//{ path: '/products', component: () => import('...'), meta: { requiresAuth: true } },
+
 
 const router = createRouter({
     history: createWebHistory(),

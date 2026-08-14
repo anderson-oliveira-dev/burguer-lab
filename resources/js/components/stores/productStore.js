@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import api from '../services/api';
 
 export const useProductStore = defineStore('product', {
     state: () => ({
@@ -10,7 +10,7 @@ export const useProductStore = defineStore('product', {
         async fetchProducts() {
             this.loading = true;
             try {
-                const response = await axios.get('/api/products');
+                const response = await api.get('/products');
                 this.products = response.data.data;
             } catch (error) {
                 console.error('Erro ao buscar produtos:', error);

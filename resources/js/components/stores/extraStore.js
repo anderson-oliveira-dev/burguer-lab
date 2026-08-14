@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import api from '../services/api';
 
 export const useExtraStore = defineStore('extra', {
     state: () => ({
@@ -10,7 +10,7 @@ export const useExtraStore = defineStore('extra', {
         async fetchExtras() {
             this.loading = true;
             try {
-                const response = await axios.get('/api/extras');
+                const response = await api.get('/extras');
                 this.extras = response.data.data;
             } catch (error) {
                 console.error('Erro ao buscar extras:', error);
