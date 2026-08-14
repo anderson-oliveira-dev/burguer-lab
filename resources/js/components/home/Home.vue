@@ -16,7 +16,9 @@
                 />
             </div>
             <div v-else>
-                Sem produtos
+                <div class="alert alert-warning" role="alert">
+                    Sem produtos disponíveis
+                </div>
             </div>
         </div>
     </div>
