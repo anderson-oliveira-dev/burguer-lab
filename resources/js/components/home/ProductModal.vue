@@ -58,6 +58,7 @@
 import { Modal } from 'bootstrap';
 import { useExtraStore } from '../stores/extraStore';
 import { mapState } from 'pinia';
+import { useCartStore } from '../stores/cartStore';
 
 export default {
     props: {
@@ -153,9 +154,19 @@ export default {
         validateQuantity() {
             if (this.quantity < 1) this.quantity = 1;
         },
-        addToCart() {
-            alert(`Adicionado ao carrinho: ${this.product.name}`);
-            this.closeModal();
+        async addToCart() {
+            const cartStore = useCartStore();
+            try {
+                await cartStore.addItem(
+                    this.product.id,
+                    this.quantity,
+                    this.selectedExtras
+                );
+                alert('Produto adicionado ao carrinho!');
+                this.closeModal();
+            } catch (error) {
+                alert('Erro ao adicionar ao carrinho. Tente novamente.');
+            }
         },
         closeModal() {
             this.modalInstance?.hide();

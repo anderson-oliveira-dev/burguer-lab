@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
+import { useCartStore } from './cartStore';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -16,6 +17,10 @@ export const useAuthStore = defineStore('auth', {
                 this.user = response.data.user;
                 this.token = response.data.token;
                 localStorage.setItem('auth_token', this.token);
+
+                const cartStore = useCartStore();
+                await cartStore.fetchCart();
+                await cartStore.syncCart();
                 return true;
             } catch (error) {
                 console.error('Erro no login:', error);

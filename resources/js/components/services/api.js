@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getGuestId } from './guest';
 
 const api = axios.create({
     baseURL: '/api',
@@ -14,6 +15,9 @@ api.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+
+        const guestId = getGuestId();
+        config.headers['X-Guest-Id'] = guestId;
         return config;
     },
     (error) => Promise.reject(error)
