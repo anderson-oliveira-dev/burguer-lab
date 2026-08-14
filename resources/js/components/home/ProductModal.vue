@@ -22,7 +22,7 @@
                                     :class="isExtraSelected(extra.id) ? 'btn-primary' : 'btn-outline-secondary'"
                                     @click="toggleExtra(extra)"
                                 >
-                                    {{ extra.name }} (+ R$ {{ extra.price }})
+                                    {{ extra.name }} (+ R$ {{ extra.price.toFixed(2) }})
                                 </button>
                             </div>
                         </div>
@@ -96,9 +96,7 @@ export default {
         if (modalEl) {
             this.modalInstance = new Modal(modalEl);
 
-            this.onShown = () => {
-                console.log('Modal Product aberto');
-            };
+            this.onShown = () => {};
             this.onHidden = () => {
                 this.$emit('close');
             };
@@ -112,13 +110,8 @@ export default {
             (newVal) => {
                 if (newVal) {
                     const extraStore = useExtraStore();
-                    console.log('Extras antes do fetch:', extraStore.extras);
                     if (extraStore.extras.length === 0) {
-                        extraStore.fetchExtras().then(() => {
-                            console.log('Extras após fetch:', extraStore.extras);
-                        });
-                    } else {
-                        console.log('Extras já carregados:', extraStore.extras);
+                        extraStore.fetchExtras();
                     }
                     this.selectedExtras = [];
                     this.quantity = 1;
