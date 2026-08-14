@@ -100,3 +100,65 @@ order_items
 
 carts
   - id, user_id, items (JSON), updated_at
+```
+
+## 🐳 Como executar o projeto (com Docker)
+
+Este projeto utiliza a base laravel-docker-base. Siga os passos abaixo:
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/seu-usuario/burguer-delivery.git
+cd burguer-delivery
+```
+
+### 2. Configure o ambiente
+
+Copie o <code>.env.example</code> e ajuste as credenciais do banco:
+
+```bash
+cp .env.example .env
+```
+
+As credenciais padrão já estão alinhadas com o <code>docker-compose.yml</code>:
+
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=burguer_db
+DB_USERNAME=burguer_user
+DB_PASSWORD=secret
+```
+
+### 3. Suba os containers
+
+```bash
+docker-compose up -d --build
+```
+
+### 4. Instale as dependências
+
+```bash
+docker-compose exec php composer install
+```
+
+### 5. Gere a chave da aplicação e execute as migrações
+
+```bash
+docker-compose exec php php artisan key:generate
+docker-compose exec php php artisan migrate --seed
+```
+
+### 6. Executar as migrações
+
+```bash
+docker-compose exec php composer install
+```
+
+### 7. Acesse a aplicação
+
+- Frontend: http://localhost:8080
+- phpMyAdmin (opcional): http://localhost:8081 – servidor: mysql, usuário: burguer_user, senha: secret
