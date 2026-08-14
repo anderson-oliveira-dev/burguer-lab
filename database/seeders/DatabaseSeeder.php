@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategorySeeder::class);
 
+        $this->call(ExtraSeeder::class);
+
         $categories = Category::all();
 
         Product::factory(20)->make()->each(function ($product) use ($categories) {
