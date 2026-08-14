@@ -34,6 +34,7 @@
     </main>
 
     <LoginModal />
+    <ProductModal />
 
     <footer class="footer mt-auto py-3 text-sm lh-normal">
         <div class="container">
@@ -42,13 +43,15 @@
     </footer>
 </template>
 <script>
+import ProductModal from './home/ProductModal.vue';
 import LoginButton from './login/LoginButton.vue';
 import LoginModal from './login/LoginModal.vue';
 
 export default {
     components: {
         LoginModal,
-        LoginButton
+        LoginButton,
+        ProductModal
     }
 }
 </script>

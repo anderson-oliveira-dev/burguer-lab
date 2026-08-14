@@ -13,12 +13,7 @@ class ExtraController extends Controller
      */
     public function index()
     {
-        $products = Extra::with('category')
-            ->available()
-            ->orderBy('name')
-            ->get();
-
-        return ExtraResource::collection($products);
+        return ExtraResource::collection(Extra::all());
     }
 
     /**

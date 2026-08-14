@@ -4,6 +4,7 @@ export const useModalStore = defineStore('modal', {
     state: () => ({
         modals: {
             login: false,
+            productDetail: false,
         }
     }),
     getters: {
