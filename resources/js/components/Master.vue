@@ -14,7 +14,10 @@
                         <RouterLink class="nav-link" active-class="active" to="/orders">Pedidos</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <RouterLink class="nav-link" active-class="active" to="/cart">Carrinho</RouterLink>
+                        <RouterLink class="nav-link" active-class="active" to="/cart">
+                            Carrinho
+                            <span class="badge text-bg-primary">{{ cartCount }}</span>
+                        </RouterLink>
                     </li>
                     <li class="nav-item">
                         <RouterLink class="nav-link" active-class="active" to="/profile">Perfil</RouterLink>
@@ -46,12 +49,18 @@
 import ProductModal from './home/ProductModal.vue';
 import LoginButton from './login/LoginButton.vue';
 import LoginModal from './login/LoginModal.vue';
+import { useCartStore } from './stores/cartStore.js';
 
 export default {
     components: {
         LoginModal,
         LoginButton,
         ProductModal
+    },
+    computed: {
+        cartCount(){
+            return useCartStore().itemCount;
+        }
     }
 }
 </script>
