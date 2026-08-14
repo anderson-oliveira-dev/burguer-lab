@@ -21,6 +21,6 @@ Route::get('/extras', [ExtraController::class, 'index']);
 Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart', [CartController::class, 'store']);
 Route::put('/cart/{itemId}', [CartController::class, 'update']);
-Route::delete('/cart/{itemId}', [CartController::class, 'destroy']);
 Route::delete('/cart/clear', [CartController::class, 'clear']);
+Route::delete('/cart/{itemId}', [CartController::class, 'destroy']);
 Route::post('/cart/sync', [CartController::class, 'sync']);
