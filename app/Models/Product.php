@@ -18,6 +18,13 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function getImageUrlAttribute()
+    {
+        return $this->image
+            ? asset('images/products/' . $this->image)
+            : asset('images/products/default.jpg');
+    }
+
     public function scopeAvailable($query)
     {
         return $query->where('status', 'disponivel');

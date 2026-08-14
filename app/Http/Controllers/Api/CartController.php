@@ -22,8 +22,14 @@ class CartController extends Controller
         }
 
         $cart->load('items.product');
+
         $items = $cart->items->map(function ($item) {
-            $item->subtotal = $item->subtotal; // já existe no model?
+            $item->subtotal = $item->subtotal;
+
+            if ($item->product) {
+                $item->product->image = $item->product->image_url;
+            }
+
             return $item;
         });
 

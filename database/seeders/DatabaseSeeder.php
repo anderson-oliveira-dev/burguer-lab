@@ -23,12 +23,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ExtraSeeder::class);
 
-        $categories = Category::all();
-
-        Product::factory(20)->make()->each(function ($product) use ($categories) {
-            $product->category_id = $categories->random()->id;
-            $product->save();
-        });
+        $this->call(ProductSeeder::class);
 
         User::factory()->create([
             'name' => 'Admin',
