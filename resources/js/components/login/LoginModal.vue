@@ -98,7 +98,7 @@ export default {
                 const authStore = useAuthStore();
                 await authStore.login(this.form.login, this.form.password);
                 this.closeModal();
-                window.location.href = '/';
+                alert('Login realizado com sucesso!');
             } catch (err) {
                 this.error = 'Credenciais inválidas. Tente novamente.';
             } finally {

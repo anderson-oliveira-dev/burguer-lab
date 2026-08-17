@@ -35,7 +35,7 @@ export default {
         },
         async handleLogout() {
             await useAuthStore().logout();
-            window.location.href = '/';
+            alert('Logout realizado com sucesso!');
         }
     }
 };

@@ -11,10 +11,7 @@
             const cartStore = useCartStore();
 
             authStore.loadToken();
-
-            if (!authStore.isAuthenticated) {
-                await cartStore.fetchCart();
-            }
+            await cartStore.fetchCart();
         },
     };
 </script>

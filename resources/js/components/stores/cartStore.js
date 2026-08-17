@@ -28,7 +28,7 @@ export const useCartStore = defineStore('cart', {
             this.loading = true;
             try {
                 await api.post('/cart', { product_id: productId, quantity, extras });
-                await this.fetchCart(); // recarrega o carrinho atualizado
+                await this.fetchCart();
             } catch (error) {
                 console.error('Erro ao adicionar item:', error);
                 throw error;

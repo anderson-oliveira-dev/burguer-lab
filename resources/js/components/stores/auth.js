@@ -19,7 +19,6 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem('auth_token', this.token);
 
                 const cartStore = useCartStore();
-                await cartStore.fetchCart();
                 await cartStore.syncCart();
                 return true;
             } catch (error) {
@@ -36,6 +35,9 @@ export const useAuthStore = defineStore('auth', {
                 this.user = null;
                 this.token = null;
                 localStorage.removeItem('auth_token');
+
+                const cartStore = useCartStore();
+                await cartStore.fetchCart();
             }
         },
         async register(userData) {

@@ -7,7 +7,6 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -56,11 +55,11 @@ class CartController extends Controller
         ]);
 
         $cart = $this->getCart($request, true);
+        $cart->load('items');
 
         $product = Product::findOrFail($validated['product_id']);
         $extras = $validated['extras'] ?? [];
 
-        // Verifica se já existe item idêntico (mesmo produto e extras)
         $existingItem = $this->findSimilarItem($cart, $validated['product_id'], $extras);
 
         if ($existingItem) {
@@ -89,7 +88,7 @@ class CartController extends Controller
         ]);
 
         $item = CartItem::findOrFail($itemId);
-        $this->authorizeCartItem($item, $request); // passa o request
+        $this->authorizeCartItem($item, $request);
 
         $item->quantity = $validated['quantity'];
         $item->save();
@@ -130,25 +129,22 @@ class CartController extends Controller
     public function sync(Request $request)
     {
         $validated = $request->validate([
-            'items' => 'required|array',
+            'items' => 'nullable|array',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'items.*.extras' => 'array',
+            'items.*.extras' => 'nullable|array',
             'items.*.extras.*.id' => 'integer',
             'items.*.extras.*.name' => 'string',
             'items.*.extras.*.price' => 'numeric',
         ]);
 
-        // Obtém o carrinho do usuário autenticado (cria se não existir)
         $cart = $this->getCart($request, true);
 
-        // Processa cada item recebido
         foreach ($validated['items'] as $itemData) {
             $product = Product::find($itemData['product_id']);
             $extras = $itemData['extras'] ?? [];
             $extrasJson = $this->normalizeExtras($extras);
 
-            // Procura um item existente com mesmo produto e extras
             $existingItem = null;
             foreach ($cart->items as $item) {
                 $itemExtrasJson = $this->normalizeExtras($item->extras);
@@ -159,11 +155,9 @@ class CartController extends Controller
             }
 
             if ($existingItem) {
-                // Soma a quantidade
                 $existingItem->quantity += $itemData['quantity'];
                 $existingItem->save();
             } else {
-                // Cria novo item
                 $item = new CartItem();
                 $item->cart_id = $cart->id;
                 $item->product_id = $itemData['product_id'];
@@ -174,16 +168,14 @@ class CartController extends Controller
             }
         }
 
-        // Remove o carrinho do convidado (se existir e for diferente)
         $guestId = $request->header('X-Guest-Id') ?? $request->input('guest_id');
-        if ($guestId && auth()->check()) {
+        if ($guestId && auth('sanctum')->check()) {
             $guestCart = Cart::where('guest_id', $guestId)->whereNull('user_id')->first();
             if ($guestCart && $guestCart->id != $cart->id) {
                 $guestCart->delete();
             }
         }
 
-        // Retorna o carrinho atualizado
         return $this->index($request);
     }
 
@@ -194,7 +186,7 @@ class CartController extends Controller
      */
     private function getCart(Request $request, $createIfMissing = false)
     {
-        $userId = auth()->id();
+        $userId = auth('sanctum')->id();
         $guestId = $request->header('X-Guest-Id') ?? $request->input('guest_id');
 
         // Se não houver identificador de convidado e o usuário não estiver autenticado,
@@ -260,16 +252,17 @@ class CartController extends Controller
     private function authorizeCartItem($item, Request $request)
     {
         $cart = $item->cart;
-        $userId = auth()->id();
+        $userId = auth('sanctum')->id();
         $guestId = $request->header('X-Guest-Id') ?? $request->input('guest_id');
 
         if ($cart->user_id && $cart->user_id != $userId) {
             abort(403, 'Unauthorized');
         }
+
         if ($cart->guest_id && $cart->guest_id != $guestId) {
             abort(403, 'Unauthorized');
         }
-        // Se ambos são null, algo está errado
+
         if (!$cart->user_id && !$cart->guest_id) {
             abort(403, 'Invalid cart');
         }
