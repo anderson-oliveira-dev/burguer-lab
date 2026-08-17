@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <h1>Cardápio</h1>
+    <div class="container py-4">
+        <h1 class="mb-4">Cardápio</h1>
 
         <div v-if="loading" class="row g-4">
             <div v-for="(item, index) in [1,2,3,4]" :key="index" class="col-3">
