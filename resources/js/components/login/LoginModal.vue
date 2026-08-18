@@ -1,12 +1,12 @@
 <template>
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2" id="loginModalLabel">Login</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-5 pt-0">
                     <form @submit.prevent="handleLogin">
                         <div class="mb-3">
                             <label for="loginInput" class="form-label">Email ou Telefone</label>
@@ -16,7 +16,7 @@
                             <label for="passwordInput" class="form-label">Senha</label>
                             <input type="password" class="form-control" id="passwordInput" v-model="form.password" required />
                         </div>
-                        <button type="submit" class="btn btn-primary" :disabled="loading">
+                        <button type="submit" class="btn btn-primary w-100" :disabled="loading">
                             {{ loading ? 'Entrando...' : 'Entrar' }}
                         </button>
                         <div v-if="error" class="text-danger mt-2">{{ error }}</div>
@@ -117,3 +117,8 @@ export default {
     }
 };
 </script>
+<style scoped>
+.modal-dialog {
+    width: 380px;
+}
+</style>
