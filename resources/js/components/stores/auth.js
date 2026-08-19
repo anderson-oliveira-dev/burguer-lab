@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import api from '../services/api';
 import { useCartStore } from './cartStore';
 import { notifyError, notifySuccess } from '../services/notify';
+import { confirm } from '../services/dialog';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -31,19 +32,29 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async logout() {
-            try {
-                await api.post('/logout');
-                notifySuccess('Logout realizado com sucesso!');
-            } catch (error) {
-                console.error('Erro no logout:', error);
-                notifyError('Erro ao fazer logout.');
-            } finally {
-                this.user = null;
-                this.token = null;
-                localStorage.removeItem('auth_token');
+            const confirmed = await confirm(
+                'Deseja realmente sair?',
+                'Você precisará fazer login novamente para acessar sua conta.',
+                'warning',
+                'Sim, sair',
+                'Cancelar'
+            );
 
-                const cartStore = useCartStore();
-                await cartStore.fetchCart();
+            if(confirmed){
+                try {
+                    await api.post('/logout');
+                    notifySuccess('Logout realizado com sucesso!');
+                } catch (error) {
+                    console.error('Erro no logout:', error);
+                    notifyError('Erro ao fazer logout.');
+                } finally {
+                    this.user = null;
+                    this.token = null;
+                    localStorage.removeItem('auth_token');
+
+                    const cartStore = useCartStore();
+                    await cartStore.fetchCart();
+                }
             }
         },
         async register(userData) {
