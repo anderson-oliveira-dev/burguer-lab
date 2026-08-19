@@ -181,9 +181,7 @@ export default {
         },
 
         checkout() {
-            alert('Funcionalidade de checkout em desenvolvimento.');
-            // Pode redirecionar para /checkout
-            // this.$router.push('/checkout');
+            this.$router.push('/checkout');
         },
     },
 };

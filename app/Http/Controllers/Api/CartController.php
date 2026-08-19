@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    /**
-     * Retorna o carrinho atual com itens e total
-     */
     public function index(Request $request)
     {
         $cart = $this->getCart($request);
@@ -40,9 +37,6 @@ class CartController extends Controller
         ]);
     }
 
-    /**
-     * Adiciona um item ao carrinho
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -78,9 +72,6 @@ class CartController extends Controller
         return $this->index($request);
     }
 
-    /**
-     * Atualiza a quantidade de um item
-     */
     public function update(Request $request, $itemId)
     {
         $validated = $request->validate([
@@ -96,9 +87,6 @@ class CartController extends Controller
         return $this->index($request);
     }
 
-    /**
-     * Remove um item do carrinho
-     */
     public function destroy(Request $request, $itemId)
     {
         $item = CartItem::findOrFail($itemId);
@@ -108,9 +96,6 @@ class CartController extends Controller
         return response()->json(['message' => 'Item removido']);
     }
 
-    /**
-     * Limpa todo o carrinho
-     */
     public function clear(Request $request)
     {
         $cart = $this->getCart($request);
@@ -122,10 +107,6 @@ class CartController extends Controller
         return response()->json(['message' => 'Carrinho limpo']);
     }
 
-    /**
-     * Sincroniza (merge) carrinho local após login
-     * (mantido para uso futuro com autenticação)
-     */
     public function sync(Request $request)
     {
         $validated = $request->validate([
@@ -179,22 +160,12 @@ class CartController extends Controller
         return $this->index($request);
     }
 
-    // --- Métodos auxiliares ---
-
-    /**
-     * Obtém o carrinho do usuário autenticado ou do convidado (via guest_id)
-     */
     private function getCart(Request $request, $createIfMissing = false)
     {
         $userId = auth('sanctum')->id();
         $guestId = $request->header('X-Guest-Id') ?? $request->input('guest_id');
 
-        // Se não houver identificador de convidado e o usuário não estiver autenticado,
-        // podemos gerar um novo guest_id (ou retornar null)
         if (!$userId && !$guestId) {
-            // Opção: gerar um novo guest_id no servidor e retornar? 
-            // Melhor: o cliente deve enviar um UUID gerado por ele.
-            // Lançar exceção ou retornar null.
             return null;
         }
 
@@ -218,9 +189,6 @@ class CartController extends Controller
         return $cart;
     }
 
-    /**
-     * Encontra item similar (mesmo produto e extras)
-     */
     private function findSimilarItem($cart, $productId, $extras)
     {
         $extrasJson = $this->normalizeExtras($extras);
@@ -234,9 +202,6 @@ class CartController extends Controller
         return null;
     }
 
-    /**
-     * Normaliza extras para comparação JSON (ordena por id)
-     */
     private function normalizeExtras($extras)
     {
         if (empty($extras)) {
@@ -246,9 +211,6 @@ class CartController extends Controller
         return json_encode($sorted);
     }
 
-    /**
-     * Verifica se o item pertence ao carrinho do usuário atual ou convidado
-     */
     private function authorizeCartItem($item, Request $request)
     {
         $cart = $item->cart;
