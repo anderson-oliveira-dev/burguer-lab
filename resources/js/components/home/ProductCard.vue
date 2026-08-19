@@ -1,5 +1,5 @@
 <template>
-    <div class="card h-100">
+    <div class="card h-100 card-hover">
         <div v-if="product.image" class="card-img-top" :style="{ backgroundImage: `url(${product.image})`, backgroundSize: 'cover' }"></div>
         <div v-else class="card-img-top bg-secondary"></div>
         <div class="card-body d-flex flex-column">
@@ -36,5 +36,15 @@ export default {
     .card-img-top {
         height: 280px;
     }
+}
+
+.card-hover {
+    transition: transform 0.25s ease;
+    will-change: transform;
+}
+
+.card-hover:hover {
+    transform: scale(1.04);
+    z-index: 1;
 }
 </style>
