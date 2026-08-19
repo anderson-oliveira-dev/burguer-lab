@@ -1,8 +1,10 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { useAuthStore } from './components/stores/auth.js';
+
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
+import { mask } from 'vue-the-mask';
 
 import App from './components/App.vue';
 import router from './router';
@@ -26,6 +28,8 @@ const options = {
     icon: true,
     rtl: false
 }
+
+app.directive('mask', mask);
 
 app.use(pinia);
 app.use(router);

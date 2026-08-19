@@ -20,7 +20,7 @@
                     <thead>
                         <tr>
                             <th>Produto</th>
-                            <th class="d-none d-sm-table-cell">Preço unit.</th>
+                            <th class="d-none d-sm-table-cell text-nowrap">Preço unit.</th>
                             <th>Extras</th>
                             <th>Quantidade</th>
                             <th>Subtotal</th>
@@ -59,7 +59,7 @@
                             </span>
                             <span v-else class="text-muted">Nenhum</span>
                         </td>
-                        <td style="min-width: 120px;">
+                        <td style="max-width: 100px;">
                             <div class="input-group input-group-sm">
                                 <button
                                     class="btn btn-outline-secondary"
@@ -69,10 +69,12 @@
                                     -
                                 </button>
                                 <input
-                                    type="number"
+                                    type="text"
                                     class="form-control text-center"
                                     v-model.number="item.quantity"
+                                    v-mask="'##'"
                                     min="1"
+                                    style="max-width: 80px;"
                                     @change="updateQuantity(item, item.quantity)"
                                     @input="validateQuantity(item)"
                                 />

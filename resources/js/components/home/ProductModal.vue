@@ -40,9 +40,10 @@
                                 <div class="input-group" style="max-width: 150px;">
                                     <button class="btn btn-outline-secondary" @click="decrementQuantity">-</button>
                                     <input
-                                        type="number"
+                                        type="text"
                                         class="form-control text-center"
                                         v-model.number="quantity"
+                                        v-mask="'##'"
                                         min="1"
                                         @input="validateQuantity"
                                     />
