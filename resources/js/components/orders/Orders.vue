@@ -35,7 +35,7 @@
                                 <div v-for="order in ordersGroup" :key="order.id" class="card mb-2">
                                     <div class="card-body py-2">
                                         <div class="d-flex justify-content-between align-items-start">
-                                            <div>
+                                            <div class="flex-grow-1">
                                                 <strong>#{{ order.id }}</strong>
                                                 <span class="text-muted small"> - {{ order.user?.name || 'Cliente' }}</span>
                                                 <br>
@@ -45,24 +45,24 @@
                                                     {{new Date(order.created_at).toLocaleString()}}
                                                 </small>
                                             </div>
-                                            <div>
+                                            <div class="ms-auto d-flex flex-column align-items-end">
                                                 <button
                                                     v-if="order.status === 'awaiting_confirmation'"
-                                                    class="btn btn-sm btn-success"
+                                                    class="btn btn-sm btn-success mb-1"
                                                     @click="changeStatus(order.id, 'preparing')"
                                                 >
                                                     Confirmar
                                                 </button>
                                                 <button
                                                     v-if="order.status === 'preparing'"
-                                                    class="btn btn-sm btn-primary"
+                                                    class="btn btn-sm btn-primary mb-1"
                                                     @click="changeStatus(order.id, 'ready_for_delivery')"
                                                 >
                                                     Pronto / Sair
                                                 </button>
                                                 <button
                                                     v-if="order.status === 'ready_for_delivery'"
-                                                    class="btn btn-sm btn-info"
+                                                    class="btn btn-sm btn-info mb-1"
                                                     @click="changeStatus(order.id, 'delivered')"
                                                 >
                                                     Entregar
