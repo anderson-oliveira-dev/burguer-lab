@@ -1,48 +1,59 @@
 <template>
     <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 v-if="product" class="modal-title" id="productModalLabel">{{ product.name }}</h5>
                     <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div v-if="product">
-                        <img v-if="product.image" :src="product.image" class="img-fluid mb-3" />
-                        <p>{{ product.description }}</p>
-                        <p><strong>Preço base:</strong> R$ {{ product.price.toFixed(2) }}</p>
-
-                        <div v-if="allExtras.length" class="mb-3">
-                            <h6>Escolha os extras:</h6>
-                            <div class="d-flex flex-wrap gap-2">
-                                <button
-                                    v-for="extra in allExtras"
-                                    :key="extra.id"
-                                    class="btn"
-                                    :class="isExtraSelected(extra.id) ? 'btn-primary' : 'btn-outline-secondary'"
-                                    @click="toggleExtra(extra)"
-                                >
-                                    {{ extra.name }} (+ R$ {{ extra.price.toFixed(2) }})
-                                </button>
-                            </div>
+                    <div v-if="product" class="row">
+                        <!-- Left column: image + description -->
+                        <div class="col-md-6">
+                            <img
+                                v-if="product.image"
+                                :src="product.image"
+                                class="img-fluid product-image mb-2"
+                                alt="Imagem do produto"
+                            />
+                            <p class="product-description">{{ product.description }}</p>
+                            <p><strong>Preço base:</strong> R$ {{ product.price.toFixed(2) }}</p>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Quantidade</label>
-                            <div class="input-group" style="max-width: 150px;">
-                                <button class="btn btn-outline-secondary" @click="decrementQuantity">-</button>
-                                <input
-                                    type="number"
-                                    class="form-control text-center"
-                                    v-model.number="quantity"
-                                    min="1"
-                                    @input="validateQuantity"
-                                />
-                                <button class="btn btn-outline-secondary" @click="incrementQuantity">+</button>
+                        <!-- Right column: extras + quantity -->
+                        <div class="col-md-6">
+                            <div v-if="allExtras.length" class="mb-3">
+                                <h6>Escolha os extras:</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button
+                                        v-for="extra in allExtras"
+                                        :key="extra.id"
+                                        class="btn"
+                                        :class="isExtraSelected(extra.id) ? 'btn-primary' : 'btn-outline-secondary'"
+                                        @click="toggleExtra(extra)"
+                                    >
+                                        {{ extra.name }} (+ R$ {{ extra.price.toFixed(2) }})
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        <p><strong>Total:</strong> R$ {{ total.toFixed(2) }}</p>
+                            <div class="mb-3">
+                                <label class="form-label">Quantidade</label>
+                                <div class="input-group" style="max-width: 150px;">
+                                    <button class="btn btn-outline-secondary" @click="decrementQuantity">-</button>
+                                    <input
+                                        type="number"
+                                        class="form-control text-center"
+                                        v-model.number="quantity"
+                                        min="1"
+                                        @input="validateQuantity"
+                                    />
+                                    <button class="btn btn-outline-secondary" @click="incrementQuantity">+</button>
+                                </div>
+                            </div>
+
+                            <p><strong>Total:</strong> R$ {{ total.toFixed(2) }}</p>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -169,3 +180,24 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.product-image {
+    max-height: 300px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    border: 2px solid #dee2e6;
+    margin: 0 auto 0.5rem auto;
+}
+
+.product-description {
+    font-size: 0.95rem;
+}
+
+@media (max-width: 767.98px) {
+    .product-image {
+        max-height: 150px;
+    }
+}
+</style>
