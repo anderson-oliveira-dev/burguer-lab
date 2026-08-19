@@ -172,9 +172,18 @@ import { useOrderStore } from '../stores/orderStore';
 import { useAuthStore } from '../stores/auth';
 
 export default {
+    data() {
+        return {
+            pollingInterval: null,
+        };
+    },
+
     computed: {
         orderStore() {
             return useOrderStore();
+        },
+        isAuthenticated() {
+            return this.authStore.isAuthenticated;
         },
         authStore() {
             return useAuthStore();
@@ -183,7 +192,7 @@ export default {
             return this.orderStore.currentOrder;
         },
         isAdmin() {
-            return this.user && this.user.type === 'admin';
+            return this.authStore.user && this.authStore.user.type === 'admin';
         },
         canAct() {
             if (!this.order) return false;
@@ -197,6 +206,16 @@ export default {
         },
     },
 
+    mounted() {
+        if (this.isAuthenticated) {
+            this.startPolling();
+        }
+    },
+
+    beforeUnmount() {
+        this.stopPolling();
+    },
+
     methods: {
         statusLabel(status) {
             const map = {
@@ -208,6 +227,7 @@ export default {
             };
             return map[status] || status;
         },
+
         statusBadge(status) {
             const map = {
                 awaiting_confirmation: 'bg-warning',
@@ -218,6 +238,7 @@ export default {
             };
             return map[status] || 'bg-secondary';
         },
+
         paymentMethodLabel(method) {
             const map = {
                 cash: 'Dinheiro',
@@ -234,6 +255,26 @@ export default {
         async cancelOrder() {
             await this.orderStore.cancelOrder(this.order.id);
             this.$router.push('/orders');
+        },
+
+        startPolling() {
+            if (this.pollingInterval) return;
+
+            this.pollingInterval = setInterval(() => {
+                if (this.isAuthenticated) {
+                const id = this.$route.params.id;
+                if (id) {
+                    this.orderStore.fetchOrder(id);
+                }
+                }
+            }, 5000);
+        },
+
+        stopPolling() {
+            if (this.pollingInterval) {
+                clearInterval(this.pollingInterval);
+                this.pollingInterval = null;
+            }
         },
     },
 
@@ -252,6 +293,13 @@ export default {
         '$route.params.id': function (newId) {
             if (newId) {
                 this.orderStore.fetchOrder(newId);
+            }
+        },
+        isAuthenticated(newVal) {
+            if (newVal) {
+                this.startPolling();
+            } else {
+                this.stopPolling();
             }
         },
     },

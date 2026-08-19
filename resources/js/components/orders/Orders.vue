@@ -140,7 +140,7 @@ export default {
 
     data() {
         return {
-
+            pollingInterval: null,
         };
     },
 
@@ -172,6 +172,16 @@ export default {
             }
             return groups;
         },
+    },
+
+    mounted() {
+        if (this.isAuthenticated) {
+            this.startPolling();
+        }
+    },
+
+    beforeUnmount() {
+        this.stopPolling();
     },
 
     methods: {
@@ -208,6 +218,23 @@ export default {
         viewOrder(orderId) {
             this.$router.push(`/orders/${orderId}`);
         },
+
+        startPolling() {
+            if (this.pollingInterval) return;
+
+            this.pollingInterval = setInterval(() => {
+                if (this.isAuthenticated) {
+                this.orderStore.fetchOrders();
+                }
+            }, 5000);
+        },
+
+        stopPolling() {
+            if (this.pollingInterval) {
+                clearInterval(this.pollingInterval);
+                this.pollingInterval = null;
+            }
+        },
     },
 
     async created() {
@@ -219,7 +246,9 @@ export default {
     watch: {
         isAuthenticated(newVal) {
             if (newVal) {
-                this.orderStore.fetchOrders();
+                this.startPolling();
+            } else {
+                this.stopPolling();
             }
         },
     },
