@@ -1,7 +1,7 @@
 <template>
     <div class="card h-100">
-        <div v-if="product.image" class="card-img-top" :style="{ backgroundImage: `url(${product.image})`, backgroundSize: 'cover', height: '200px' }"></div>
-        <div v-else class="card-img-top bg-secondary" style="height: 200px;"></div>
+        <div v-if="product.image" class="card-img-top" :style="{ backgroundImage: `url(${product.image})`, backgroundSize: 'cover' }"></div>
+        <div v-else class="card-img-top bg-secondary"></div>
         <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text flex-grow-1">{{ product.description }}</p>
@@ -27,3 +27,14 @@ export default {
     },
 };
 </script>
+<style scoped>
+.card-img-top {
+    height: 250px;
+    object-fit: cover;
+}
+@media (max-width: 576px) {
+    .card-img-top {
+        height: 280px;
+    }
+}
+</style>

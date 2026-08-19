@@ -2,14 +2,14 @@
     <div class="container py-4">
         <h1 class="mb-4">Cardápio</h1>
 
-        <div v-if="loading" class="row g-4">
-            <div v-for="(item, index) in [1,2,3,4]" :key="index" class="col-3">
+        <div v-if="loading" class="row g-3 row-cols-2 row-cols-sm-3 row-cols-md-4">
+            <div v-for="(item, index) in [1,2,3,4]" :key="index" class="col">
                 <ProductPlaceholder />
             </div>
         </div>
 
-        <div v-else class="row g-3">
-            <div v-if="products.length" v-for="product in products" :key="product.id" class="col-3">
+        <div v-else class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-4">
+            <div v-if="products.length" v-for="product in products" :key="product.id" class="col">
                 <ProductCard
                     :product="product"
                     @open-modal="openProductModal"
