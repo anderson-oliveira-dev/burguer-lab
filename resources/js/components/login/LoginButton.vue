@@ -10,7 +10,7 @@
         </button>
         <div class="dropdown" ref="dropdownContainer" v-else>
             <a href="#" class="btn d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                👤
+                Olá, {{ user.name }} 👤
             </a>
             <ul class="dropdown-menu text-small" style="">
                 <li><a class="dropdown-item" href="#">Configurações</a></li>
@@ -43,6 +43,10 @@ export default {
     computed: {
         isAuthenticated() {
             return useAuthStore().isAuthenticated;
+        },
+
+        user() {
+            return useAuthStore().user;
         }
     },
     methods: {
