@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
 import { notifyError, notifySuccess } from '../services/notify';
+import { confirm } from '../services/dialog';
 
 export const useCartStore = defineStore('cart', {
     state: () => ({
@@ -56,33 +57,53 @@ export const useCartStore = defineStore('cart', {
         },
 
         async removeItem(itemId) {
-            this.loading = true;
-            try {
-                await api.delete(`/cart/${itemId}`);
-                notifySuccess('Item removido!');
-                await this.fetchCart();
-            } catch (error) {
-                console.error('Erro ao remover item:', error);
-                notifyError('Erro ao remover item.');
-                throw error;
-            } finally {
-                this.loading = false;
+            const confirmed = await confirm(
+                'Remover item',
+                'Tem certeza que deseja remover este item?',
+                'warning',
+                'Sim, Remover',
+                'Cancelar'
+            );
+
+            if (confirmed) {
+                this.loading = true;
+                try {
+                    await api.delete(`/cart/${itemId}`);
+                    notifySuccess('Item removido!');
+                    await this.fetchCart();
+                } catch (error) {
+                    console.error('Erro ao remover item:', error);
+                    notifyError('Erro ao remover item.');
+                    throw error;
+                } finally {
+                    this.loading = false;
+                }
             }
         },
 
         async clearCart() {
-            this.loading = true;
-            try {
-                await api.delete('/cart/clear');
-                notifySuccess('Carrinho limpo!');
-                this.items = [];
-                this.total = 0;
-            } catch (error) {
-                console.error('Erro ao limpar carrinho:', error);
-                notifyError('Erro ao limpar carrinho.');
-                throw error;
-            } finally {
-                this.loading = false;
+            const confirmed = await confirm(
+                'Limpar carrinho',
+                'Tem certeza que deseja limpar todo o carrinho?',
+                'warning',
+                'Sim, Limpar',
+                'Cancelar'
+            );
+
+            if(confirmed){
+                this.loading = true;
+                try {
+                    await api.delete('/cart/clear');
+                    notifySuccess('Carrinho limpo!');
+                    this.items = [];
+                    this.total = 0;
+                } catch (error) {
+                    console.error('Erro ao limpar carrinho:', error);
+                    notifyError('Erro ao limpar carrinho.');
+                    throw error;
+                } finally {
+                    this.loading = false;
+                }
             }
         },
 

@@ -228,17 +228,12 @@ export default {
         },
 
         async changeStatus(newStatus) {
-            const label = this.statusLabel(newStatus);
-            if (confirm(`Deseja alterar o status para "${label}"?`)) {
-                await this.orderStore.updateStatus(this.order.id, newStatus);
-            }
+            await this.orderStore.updateStatus(this.order.id, newStatus);
         },
 
         async cancelOrder() {
-            if (confirm('Tem certeza que deseja cancelar este pedido?')) {
-                await this.orderStore.cancelOrder(this.order.id);
-                this.$router.push('/orders');
-            }
+            await this.orderStore.cancelOrder(this.order.id);
+            this.$router.push('/orders');
         },
     },
 

@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import { confirm } from '../services/dialog';
 import { useCartStore } from '../stores/cartStore';
 import { mapState } from 'pinia';
 
@@ -160,15 +161,11 @@ export default {
         },
 
         async removeItem(itemId) {
-            if (confirm('Tem certeza que deseja remover este item?')) {
-                await this.cartStore.removeItem(itemId);
-            }
+            await this.cartStore.removeItem(itemId);
         },
 
         async clearCart() {
-            if (confirm('Tem certeza que deseja limpar todo o carrinho?')) {
-                await this.cartStore.clearCart();
-            }
+            await this.cartStore.clearCart();
         },
 
         checkout() {

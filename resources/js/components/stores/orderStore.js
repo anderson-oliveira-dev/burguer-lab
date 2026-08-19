@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
 import { notifyError, notifySuccess } from '../services/notify';
+import { confirm } from '../services/dialog';
 
 export const useOrderStore = defineStore('order', {
     state: () => ({
@@ -21,6 +22,17 @@ export const useOrderStore = defineStore('order', {
                 groups[order.status].push(order);
             }
             return groups;
+        },
+
+        statusLabel: (state) => (status) => {
+            const map = {
+                awaiting_confirmation: 'Aguardando confirmação',
+                preparing: 'Preparando',
+                ready_for_delivery: 'Pronto / Saiu',
+                delivered: 'Entregue / Retirado',
+                canceled: 'Cancelado',
+            };
+            return map[status] || status;
         },
     },
     actions: {
@@ -73,51 +85,72 @@ export const useOrderStore = defineStore('order', {
         },
 
         async updateStatus(orderId, newStatus) {
-            this.loading = true;
-            this.error = null;
-            try {
-                const response = await api.put(`/orders/${orderId}/status`, { status: newStatus });
-                const updatedOrder = response.data.order;
+            const label = this.statusLabel(newStatus);
+            const confirmed = await confirm(
+                'Atualizar pedido',
+                `Deseja alterar o pedido #${orderId} para "${label}"?`,
+                'warning',
+                'Sim, Atualizar',
+                'Cancelar'
+            );
 
-                const index = this.orders.findIndex(o => o.id === orderId);
-                if (index !== -1) {
-                    this.orders[index] = updatedOrder;
+            if(confirmed){
+                this.loading = true;
+                this.error = null;
+                try {
+                    const response = await api.put(`/orders/${orderId}/status`, { status: newStatus });
+                    const updatedOrder = response.data.order;
+
+                    const index = this.orders.findIndex(o => o.id === orderId);
+                    if (index !== -1) {
+                        this.orders[index] = updatedOrder;
+                    }
+                    if (this.currentOrder?.id === orderId) {
+                        this.currentOrder = updatedOrder;
+                    }
+                    notifySuccess('Status atualizado com sucesso!');
+                    return updatedOrder;
+                } catch (error) {
+                    this.error = error.response?.data?.message || 'Erro ao atualizar status';
+                    notifyError('Erro ao atualizar status.');
+                    throw error;
+                } finally {
+                    this.loading = false;
                 }
-                if (this.currentOrder?.id === orderId) {
-                    this.currentOrder = updatedOrder;
-                }
-                notifySuccess('Status atualizado com sucesso!');
-                return updatedOrder;
-            } catch (error) {
-                this.error = error.response?.data?.message || 'Erro ao atualizar status';
-                notifyError('Erro ao atualizar status.');
-                throw error;
-            } finally {
-                this.loading = false;
             }
         },
 
         async cancelOrder(orderId) {
-            this.loading = true;
-            this.error = null;
-            try {
-                const response = await api.post(`/orders/${orderId}/cancel`);
-                const updatedOrder = response.data.order;
-                const index = this.orders.findIndex(o => o.id === orderId);
-                if (index !== -1) {
-                    this.orders[index] = updatedOrder;
+            const confirmed = await confirm(
+                'Cancelar pedido',
+                `Tem certeza que deseja cancelar o pedido #${orderId}?`,
+                'warning',
+                'Sim, Cancelar',
+                'Não'
+            );
+
+            if(confirmed){
+                this.loading = true;
+                this.error = null;
+                try {
+                    const response = await api.post(`/orders/${orderId}/cancel`);
+                    const updatedOrder = response.data.order;
+                    const index = this.orders.findIndex(o => o.id === orderId);
+                    if (index !== -1) {
+                        this.orders[index] = updatedOrder;
+                    }
+                    if (this.currentOrder?.id === orderId) {
+                        this.currentOrder = updatedOrder;
+                    }
+                    notifySuccess('Pedido cancelado com sucesso!');
+                    return updatedOrder;
+                } catch (error) {
+                    this.error = error.response?.data?.message || 'Erro ao cancelar pedido';
+                    notifyError('Erro ao cancelar pedido.');
+                    throw error;
+                } finally {
+                    this.loading = false;
                 }
-                if (this.currentOrder?.id === orderId) {
-                    this.currentOrder = updatedOrder;
-                }
-                notifySuccess('Pedido cancelado com sucesso!');
-                return updatedOrder;
-            } catch (error) {
-                this.error = error.response?.data?.message || 'Erro ao cancelar pedido';
-                notifyError('Erro ao cancelar pedido.');
-                throw error;
-            } finally {
-                this.loading = false;
             }
         },
 

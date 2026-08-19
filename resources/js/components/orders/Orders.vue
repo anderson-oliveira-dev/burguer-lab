@@ -198,16 +198,11 @@ export default {
         },
 
         async changeStatus(orderId, newStatus) {
-            const label = this.statusLabel(newStatus);
-            if (confirm(`Deseja alterar o pedido #${orderId} para "${label}"?`)) {
-                await this.orderStore.updateStatus(orderId, newStatus);
-            }
+            await this.orderStore.updateStatus(orderId, newStatus);
         },
 
         async cancelOrder(orderId) {
-            if (confirm(`Tem certeza que deseja cancelar o pedido #${orderId}?`)) {
-                await this.orderStore.cancelOrder(orderId);
-            }
+            await this.orderStore.cancelOrder(orderId);
         },
 
         viewOrder(orderId) {
