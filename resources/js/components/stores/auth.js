@@ -32,29 +32,19 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async logout() {
-            const confirmed = await confirm(
-                'Deseja realmente sair?',
-                'Você precisará fazer login novamente para acessar sua conta.',
-                'warning',
-                'Sim, sair',
-                'Cancelar'
-            );
+            try {
+                await api.post('/logout');
+                notifySuccess('Logout realizado com sucesso!');
+            } catch (error) {
+                console.error('Erro no logout:', error);
+                notifyError('Erro ao fazer logout.');
+            } finally {
+                this.user = null;
+                this.token = null;
+                localStorage.removeItem('auth_token');
 
-            if(confirmed){
-                try {
-                    await api.post('/logout');
-                    notifySuccess('Logout realizado com sucesso!');
-                } catch (error) {
-                    console.error('Erro no logout:', error);
-                    notifyError('Erro ao fazer logout.');
-                } finally {
-                    this.user = null;
-                    this.token = null;
-                    localStorage.removeItem('auth_token');
-
-                    const cartStore = useCartStore();
-                    await cartStore.fetchCart();
-                }
+                const cartStore = useCartStore();
+                await cartStore.fetchCart();
             }
         },
         async register(userData) {

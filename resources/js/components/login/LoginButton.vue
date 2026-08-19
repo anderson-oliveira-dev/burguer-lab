@@ -63,7 +63,17 @@ export default {
             useModalStore().open('login');
         },
         async handleLogout() {
-            await useAuthStore().logout();
+            const confirmed = await confirm(
+                'Deseja realmente sair?',
+                'Você precisará fazer login novamente para acessar sua conta.',
+                'warning',
+                'Sim, sair',
+                'Cancelar'
+            );
+
+            if(confirmed){
+                await useAuthStore().logout();
+            }
         }
     },
     watch: {
