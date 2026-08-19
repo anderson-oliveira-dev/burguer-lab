@@ -14,7 +14,7 @@
             </a>
             <ul class="dropdown-menu text-small" style="">
                 <li><a class="dropdown-item" href="#">Configurações</a></li>
-                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                <li><a class="dropdown-item" @click="$router.push('/profile')" href="#">Perfil</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#" @click="handleLogout">Sair</a></li>
             </ul>
