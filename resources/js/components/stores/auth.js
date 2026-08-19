@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
 import { useCartStore } from './cartStore';
+import { notifyError, notifySuccess } from '../services/notify';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -20,17 +21,22 @@ export const useAuthStore = defineStore('auth', {
 
                 const cartStore = useCartStore();
                 await cartStore.syncCart();
+
+                notifySuccess('Login realizado com sucesso!');
                 return true;
             } catch (error) {
                 console.error('Erro no login:', error);
+                notifyError('Credenciais inválidas. Tente novamente.');
                 throw error;
             }
         },
         async logout() {
             try {
                 await api.post('/logout');
+                notifySuccess('Logout realizado com sucesso!');
             } catch (error) {
                 console.error('Erro no logout:', error);
+                notifyError('Erro ao fazer logout.');
             } finally {
                 this.user = null;
                 this.token = null;
@@ -46,9 +52,12 @@ export const useAuthStore = defineStore('auth', {
                 this.user = response.data.user;
                 this.token = response.data.token;
                 localStorage.setItem('auth_token', this.token);
+
+                notifySuccess('Cadastro realizado com sucesso!');
                 return true;
             } catch (error) {
                 console.error('Erro no registro:', error);
+                notifyError('Falha no cadastro. Tente novamente.');
                 throw error;
             }
         },
@@ -65,6 +74,7 @@ export const useAuthStore = defineStore('auth', {
                 this.user = response.data;
             } catch {
                 this.logout();
+                notifyError('Sessão expirada. Faça login novamente.');
             }
         },
     },

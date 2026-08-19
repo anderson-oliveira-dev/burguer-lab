@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
+import { notifyError, notifySuccess } from '../services/notify';
 
 export const useExtraStore = defineStore('extra', {
     state: () => ({
@@ -14,6 +15,7 @@ export const useExtraStore = defineStore('extra', {
                 this.extras = response.data.data;
             } catch (error) {
                 console.error('Erro ao buscar extras:', error);
+                notifyError('Erro ao buscar extras.');
             } finally {
                 this.loading = false;
             }

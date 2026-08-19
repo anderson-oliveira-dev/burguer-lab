@@ -319,7 +319,6 @@ export default {
                 this.cartStore.total = 0;
                 this.$router.push({ name: 'orders' });
             } catch (error) {
-                alert(error.response?.data?.message || 'Erro ao finalizar pedido. Tente novamente.');
                 throw error;
             } finally {
                 this.submitting = false;

@@ -199,21 +199,14 @@ export default {
 
         async changeStatus(orderId, newStatus) {
             const label = this.statusLabel(newStatus);
-            if (!confirm(`Deseja alterar o pedido #${orderId} para "${label}"?`)) return;
-            try {
+            if (confirm(`Deseja alterar o pedido #${orderId} para "${label}"?`)) {
                 await this.orderStore.updateStatus(orderId, newStatus);
-            } catch (error) {
-                alert('Erro ao atualizar status: ' + (error.message || ''));
             }
         },
 
         async cancelOrder(orderId) {
-            if (!confirm(`Tem certeza que deseja cancelar o pedido #${orderId}?`)) return;
-            try {
+            if (confirm(`Tem certeza que deseja cancelar o pedido #${orderId}?`)) {
                 await this.orderStore.cancelOrder(orderId);
-                alert('Pedido cancelado com sucesso.');
-            } catch (error) {
-                alert('Erro ao cancelar pedido: ' + (error.message || ''));
             }
         },
 
@@ -224,11 +217,7 @@ export default {
 
     async created() {
         if (this.isAuthenticated) {
-            try {
-                await this.orderStore.fetchOrders();
-            } catch (error) {
-                console.error('Erro ao carregar pedidos:', error);
-            }
+            await this.orderStore.fetchOrders();
         }
     },
 

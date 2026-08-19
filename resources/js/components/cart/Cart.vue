@@ -149,7 +149,6 @@ export default {
             try {
                 await this.cartStore.updateItem(item.id, newQuantity);
             } catch (error) {
-                alert('Erro ao atualizar quantidade. Tente novamente.');
                 this.cartStore.fetchCart();
             }
         },
@@ -162,21 +161,13 @@ export default {
 
         async removeItem(itemId) {
             if (confirm('Tem certeza que deseja remover este item?')) {
-                try {
-                    await this.cartStore.removeItem(itemId);
-                } catch (error) {
-                    alert('Erro ao remover item. Tente novamente.');
-                }
+                await this.cartStore.removeItem(itemId);
             }
         },
 
         async clearCart() {
             if (confirm('Tem certeza que deseja limpar todo o carrinho?')) {
-                try {
-                    await this.cartStore.clearCart();
-                } catch (error) {
-                    alert('Erro ao limpar carrinho. Tente novamente.');
-                }
+                await this.cartStore.clearCart();
             }
         },
 

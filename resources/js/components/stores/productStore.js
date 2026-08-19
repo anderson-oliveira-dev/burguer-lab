@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
+import { notifyError, notifySuccess } from '../services/notify';
 
 export const useProductStore = defineStore('product', {
     state: () => ({
@@ -14,6 +15,7 @@ export const useProductStore = defineStore('product', {
                 this.products = response.data.data;
             } catch (error) {
                 console.error('Erro ao buscar produtos:', error);
+                notifyError('Erro ao buscar produtos.');
             } finally {
                 this.loading = false;
             }

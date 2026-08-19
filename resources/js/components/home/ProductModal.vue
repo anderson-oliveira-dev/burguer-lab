@@ -156,17 +156,12 @@ export default {
         },
         async addToCart() {
             const cartStore = useCartStore();
-            try {
-                await cartStore.addItem(
-                    this.product.id,
-                    this.quantity,
-                    this.selectedExtras
-                );
-                alert('Produto adicionado ao carrinho!');
-                this.closeModal();
-            } catch (error) {
-                alert('Erro ao adicionar ao carrinho. Tente novamente.');
-            }
+            await cartStore.addItem(
+                this.product.id,
+                this.quantity,
+                this.selectedExtras
+            );
+            this.closeModal();
         },
         closeModal() {
             this.modalInstance?.hide();

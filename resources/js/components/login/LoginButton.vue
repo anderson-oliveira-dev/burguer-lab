@@ -35,7 +35,6 @@ export default {
         },
         async handleLogout() {
             await useAuthStore().logout();
-            alert('Logout realizado com sucesso!');
         }
     }
 };

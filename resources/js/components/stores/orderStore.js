@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
+import { notifyError, notifySuccess } from '../services/notify';
 
 export const useOrderStore = defineStore('order', {
     state: () => ({
@@ -31,7 +32,8 @@ export const useOrderStore = defineStore('order', {
                 this.orders = response.data;
             } catch (error) {
                 this.error = error.response?.data?.message || 'Erro ao buscar pedidos';
-                console.error('Erro fetchOrders:', error);
+                console.error('Erro ao buscar pedidos:', error);
+                notifyError('Erro ao buscar pedidos.');
                 throw error;
             } finally {
                 this.loading = false;
@@ -47,6 +49,7 @@ export const useOrderStore = defineStore('order', {
                 return response.data;
             } catch (error) {
                 this.error = error.response?.data?.message || 'Erro ao buscar pedido';
+                notifyError('Erro ao buscar pedido.');
                 throw error;
             } finally {
                 this.loading = false;
@@ -62,6 +65,7 @@ export const useOrderStore = defineStore('order', {
                 return response.data;
             } catch (error) {
                 this.error = error.response?.data?.message || 'Erro ao criar pedido';
+                notifyError('Erro ao finalizar pedido. Tente novamente');
                 throw error;
             } finally {
                 this.loading = false;
@@ -82,9 +86,11 @@ export const useOrderStore = defineStore('order', {
                 if (this.currentOrder?.id === orderId) {
                     this.currentOrder = updatedOrder;
                 }
+                notifySuccess('Status atualizado com sucesso!');
                 return updatedOrder;
             } catch (error) {
                 this.error = error.response?.data?.message || 'Erro ao atualizar status';
+                notifyError('Erro ao atualizar status.');
                 throw error;
             } finally {
                 this.loading = false;
@@ -104,9 +110,11 @@ export const useOrderStore = defineStore('order', {
                 if (this.currentOrder?.id === orderId) {
                     this.currentOrder = updatedOrder;
                 }
+                notifySuccess('Pedido cancelado com sucesso!');
                 return updatedOrder;
             } catch (error) {
                 this.error = error.response?.data?.message || 'Erro ao cancelar pedido';
+                notifyError('Erro ao cancelar pedido.');
                 throw error;
             } finally {
                 this.loading = false;
