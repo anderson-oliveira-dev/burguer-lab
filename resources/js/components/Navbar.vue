@@ -67,10 +67,16 @@
 
 <script>
 import LoginButton from './login/LoginButton.vue';
+import { useCartStore } from './stores/cartStore.js';
 
 export default {
     components: {
         LoginButton
+    },
+    computed: {
+        cartCount(){
+            return useCartStore().itemCount;
+        }
     }
 }
 </script>

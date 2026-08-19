@@ -18,7 +18,6 @@ import ProductModal from './home/ProductModal.vue';
 import LoginButton from './login/LoginButton.vue';
 import LoginModal from './login/LoginModal.vue';
 import Navbar from './Navbar.vue';
-import { useCartStore } from './stores/cartStore.js';
 
 export default {
     components: {
@@ -26,11 +25,6 @@ export default {
         ProductModal,
         Navbar,
         Footer
-    },
-    computed: {
-        cartCount(){
-            return useCartStore().itemCount;
-        }
     }
 }
 </script>
