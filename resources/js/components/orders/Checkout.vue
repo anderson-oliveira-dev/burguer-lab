@@ -58,14 +58,24 @@
                         </div>
                     </div>
 
-                    <div class="mt-3 text-end">
-                        <h5>
-                            Subtotal: <span class="text-success">R$ {{ cartStore.total.toFixed(2) }}</span>
-                        </h5>
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Subtotal:</span>
+                            <span>R$ {{ cartStore.total.toFixed(2) }}</span>
+                        </div>
+                        <div v-if="deliveryFee > 0" class="d-flex justify-content-between">
+                            <span>Taxa de entrega:</span>
+                            <span>R$ {{ deliveryFee.toFixed(2) }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total:</span>
+                            <span class="text-success">R$ {{ totalWithDelivery.toFixed(2) }}</span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6">
+                    <!-- ETAPA 1: Formulário do pedido -->
                     <div v-if="step === 1">
                         <h4>Dados do pedido</h4>
                         <form @submit.prevent="handleStep1Submit">
@@ -114,6 +124,7 @@
                         </form>
                     </div>
 
+                    <!-- ETAPA 2: Cadastro (somente para não logados) -->
                     <div v-else-if="step === 2 && !authStore.isAuthenticated">
                         <h4>Crie sua conta</h4>
                         <p class="text-muted small">Preencha os dados abaixo para finalizar o pedido.</p>
@@ -188,7 +199,6 @@ export default {
                 phone: '',
                 payment_method: 'cash',
                 observations: '',
-                delivery_fee: 0,
             },
             registerForm: {
                 name: '',
@@ -207,13 +217,18 @@ export default {
         authStore() {
             return useAuthStore();
         },
+        deliveryFee() {
+            return this.form.type === 'delivery' ? 5 : 0;
+        },
+        totalWithDelivery() {
+            return this.cartStore.total + this.deliveryFee;
+        },
     },
     watch: {
         'authStore.isAuthenticated': function(newVal, oldVal) {
             if (newVal && !oldVal) {
                 this.step = 1;
                 this.registerError = null;
-
                 this.registerForm = { name: '', email: '', password: '', password_confirmation: '', agree: false };
             }
         }
@@ -294,7 +309,7 @@ export default {
                     phone: this.form.phone,
                     payment_method: this.form.payment_method,
                     observations: this.form.observations,
-                    delivery_fee: this.form.delivery_fee,
+                    delivery_fee: this.deliveryFee,
                 };
 
                 const orderStore = useOrderStore();
