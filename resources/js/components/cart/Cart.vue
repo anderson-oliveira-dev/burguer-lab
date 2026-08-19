@@ -20,7 +20,7 @@
                     <thead>
                         <tr>
                             <th>Produto</th>
-                            <th>Preço unit.</th>
+                            <th class="d-none d-sm-table-cell">Preço unit.</th>
                             <th>Extras</th>
                             <th>Quantidade</th>
                             <th>Subtotal</th>
@@ -30,23 +30,23 @@
                 <tbody>
                     <tr v-for="item in cartStore.items" :key="item.id">
                         <td>
-                            <div class="d-flex align-items-center">
-                            <img
-                                v-if="item.product?.image"
-                                :src="item.product.image"
-                                alt="Produto"
-                                class="img-thumbnail me-3"
-                                style="width: 60px; height: 60px; object-fit: cover;"
-                            />
-                            <div>
-                                <strong>{{ item.product?.name || 'Produto' }}</strong>
-                                <p class="text-muted small mb-0">
-                                Código: #{{ item.product_id }}
-                                </p>
-                            </div>
+                            <div class="d-flex flex-column flex-sm-row align-items-sm-center">
+                                <img
+                                    v-if="item.product?.image"
+                                    :src="item.product.image"
+                                    alt="Produto"
+                                    class="img-thumbnail me-sm-3 mb-2 mb-sm-0"
+                                    style="width: 60px; height: 60px; object-fit: cover;"
+                                />
+                                <div>
+                                    <strong>{{ item.product?.name || 'Produto' }}</strong>
+                                    <p class="text-muted small mb-0">
+                                        Código: #{{ item.product_id }}
+                                    </p>
+                                </div>
                             </div>
                         </td>
-                        <td>R$ {{ Number(item.unit_price).toFixed(2) }}</td>
+                        <td class="d-none d-sm-table-cell">R$ {{ Number(item.unit_price).toFixed(2) }}</td>
                         <td>
                             <span v-if="item.extras && item.extras.length">
                                 <span
@@ -100,7 +100,7 @@
             </div>
 
             <div class="row mt-4">
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                     <button class="btn btn-outline-danger" @click="clearCart">
                         <i class="bi bi-eraser"></i> Limpar carrinho
                     </button>
