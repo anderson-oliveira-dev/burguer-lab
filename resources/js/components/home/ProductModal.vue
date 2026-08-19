@@ -8,7 +8,6 @@
                 </div>
                 <div class="modal-body">
                     <div v-if="product" class="row">
-                        <!-- Left column: image + description -->
                         <div class="col-md-6">
                             <img
                                 v-if="product.image"
@@ -20,9 +19,8 @@
                             <p><strong>Preço base:</strong> R$ {{ product.price.toFixed(2) }}</p>
                         </div>
 
-                        <!-- Right column: extras + quantity -->
                         <div class="col-md-6">
-                            <div v-if="allExtras.length" class="mb-3">
+                            <div v-if="allExtras.length && product.hasExtras" class="mb-3">
                                 <h6>Escolha os extras:</h6>
                                 <div class="d-flex flex-wrap gap-2">
                                     <button

@@ -21,6 +21,7 @@ class ProductResource extends JsonResource
             'price'       => (float) $this->price,
             'image'       => $this->image_url,
             'category'    => $this->category->name,
+            'hasExtras'   => in_array($this->category->name, ['Tradicional', 'Combo'])
         ];
     }
 }
