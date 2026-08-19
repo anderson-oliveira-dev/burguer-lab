@@ -24,139 +24,139 @@
                 </span>
             </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Informações do pedido</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Informações do pedido</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td class="fw-bold">Tipo:</td>
+                                    <td>{{ order.type === 'delivery' ? 'Entrega' : 'Retirada' }}</td>
+                                </tr>
+                                <tr v-if="order.type === 'delivery'">
+                                    <td class="fw-bold">Endereço:</td>
+                                    <td>{{ order.address || 'Não informado' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Telefone:</td>
+                                    <td>{{ order.phone || 'Não informado' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Pagamento:</td>
+                                    <td>{{ paymentMethodLabel(order.payment_method) }}</td>
+                                </tr>
+                                <tr v-if="order.observations">
+                                    <td class="fw-bold">Observações:</td>
+                                    <td>{{ order.observations }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Status:</td>
+                                    <td>
+                                        <span class="badge" :class="statusBadge(order.status)">
+                                            {{ statusLabel(order.status) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td class="fw-bold">Tipo:</td>
-                                <td>{{ order.type === 'delivery' ? 'Entrega' : 'Retirada' }}</td>
-                            </tr>
-                            <tr v-if="order.type === 'delivery'">
-                                <td class="fw-bold">Endereço:</td>
-                                <td>{{ order.address || 'Não informado' }}</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Telefone:</td>
-                                <td>{{ order.phone || 'Não informado' }}</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Pagamento:</td>
-                                <td>{{ paymentMethodLabel(order.payment_method) }}</td>
-                            </tr>
-                            <tr v-if="order.observations">
-                                <td class="fw-bold">Observações:</td>
-                                <td>{{ order.observations }}</td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Status:</td>
-                                <td>
-                                    <span class="badge" :class="statusBadge(order.status)">
-                                        {{ statusLabel(order.status) }}
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
 
-                <div v-if="canAct" class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Ações</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap gap-2">
-                            <div v-if="isAdmin">
+                    <div v-if="canAct" class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Ações</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-2">
+                                <div v-if="isAdmin">
+                                    <button
+                                        v-if="order.status === 'awaiting_confirmation'"
+                                        class="btn btn-success"
+                                        @click="changeStatus('preparing')"
+                                    >
+                                        Confirmar Pedido
+                                    </button>
+                                    <button
+                                        v-if="order.status === 'preparing'"
+                                        class="btn btn-primary"
+                                        @click="changeStatus('ready_for_delivery')"
+                                    >
+                                        Pronto / Sair para entrega
+                                    </button>
+                                    <button
+                                        v-if="order.status === 'ready_for_delivery'"
+                                        class="btn btn-info"
+                                        @click="changeStatus('delivered')"
+                                    >
+                                        Entregar / Retirado
+                                    </button>
+                                </div>
                                 <button
-                                    v-if="order.status === 'awaiting_confirmation'"
-                                    class="btn btn-success"
-                                    @click="changeStatus('preparing')"
+                                    v-if="['awaiting_confirmation', 'preparing'].includes(order.status)"
+                                    class="btn btn-danger"
+                                    @click="cancelOrder"
                                 >
-                                    Confirmar Pedido
-                                </button>
-                                <button
-                                    v-if="order.status === 'preparing'"
-                                    class="btn btn-primary"
-                                    @click="changeStatus('ready_for_delivery')"
-                                >
-                                    Pronto / Sair para entrega
-                                </button>
-                                <button
-                                    v-if="order.status === 'ready_for_delivery'"
-                                    class="btn btn-info"
-                                    @click="changeStatus('delivered')"
-                                >
-                                    Entregar / Retirado
+                                    Cancelar Pedido
                                 </button>
                             </div>
-                            <button
-                                v-if="['awaiting_confirmation', 'preparing'].includes(order.status)"
-                                class="btn btn-danger"
-                                @click="cancelOrder"
-                            >
-                                Cancelar Pedido
-                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Itens do pedido</h5>
-                    </div>
-                    <div class="card-body">
-                        <div v-if="order.items && order.items.length">
-                            <div
-                                v-for="item in order.items"
-                                :key="item.id"
-                                class="border-bottom pb-2 mb-2"
-                            >
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <strong>{{ item.product?.name || 'Produto #' + item.product_id }}</strong>
-                                        <span class="text-muted small"> ({{ item.quantity }}x)</span>
-                                        <div v-if="item.extras && item.extras.length" class="mt-1">
-                                            <span
-                                                v-for="extra in item.extras"
-                                                :key="extra.id"
-                                                class="badge bg-secondary me-1"
-                                            >
-                                                {{ extra.name }} (+ R$ {{ Number(extra.price).toFixed(2) }})
-                                            </span>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Itens do pedido</h5>
+                        </div>
+                        <div class="card-body">
+                            <div v-if="order.items && order.items.length">
+                                <div
+                                    v-for="item in order.items"
+                                    :key="item.id"
+                                    class="border-bottom pb-2 mb-2"
+                                >
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <strong>{{ item.product?.name || 'Produto #' + item.product_id }}</strong>
+                                            <span class="text-muted small"> ({{ item.quantity }}x)</span>
+                                            <div v-if="item.extras && item.extras.length" class="mt-1">
+                                                <span
+                                                    v-for="extra in item.extras"
+                                                    :key="extra.id"
+                                                    class="badge bg-secondary me-1"
+                                                >
+                                                    {{ extra.name }} (+ R$ {{ Number(extra.price).toFixed(2) }})
+                                                </span>
+                                            </div>
                                         </div>
+                                        <span class="fw-bold">R$ {{ Number(item.subtotal).toFixed(2) }}</span>
                                     </div>
-                                    <span class="fw-bold">R$ {{ Number(item.subtotal).toFixed(2) }}</span>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Subtotal</span>
+                                        <span>R$ {{ subtotal.toFixed(2) }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between" v-if="order.delivery_fee > 0">
+                                        <span>Taxa de entrega</span>
+                                        <span>R$ {{ Number(order.delivery_fee).toFixed(2) }}</span>
+                                    </div>
+                                    <hr />
+                                    <div class="d-flex justify-content-between fw-bold">
+                                        <span>Total</span>
+                                        <span class="text-success">R$ {{ Number(order.total_price).toFixed(2) }}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mt-3">
-                                <div class="d-flex justify-content-between">
-                                    <span>Subtotal</span>
-                                    <span>R$ {{ subtotal.toFixed(2) }}</span>
-                                </div>
-                                <div class="d-flex justify-content-between" v-if="order.delivery_fee > 0">
-                                    <span>Taxa de entrega</span>
-                                    <span>R$ {{ Number(order.delivery_fee).toFixed(2) }}</span>
-                                </div>
-                                <hr />
-                                <div class="d-flex justify-content-between fw-bold">
-                                    <span>Total</span>
-                                    <span class="text-success">R$ {{ Number(order.total_price).toFixed(2) }}</span>
-                                </div>
+                            <div v-else>
+                                <p class="text-muted">Nenhum item encontrado.</p>
                             </div>
-                        </div>
-                        <div v-else>
-                            <p class="text-muted">Nenhum item encontrado.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
             <div class="mt-4">
                 <router-link to="/orders" class="btn btn-outline-secondary">
@@ -280,7 +280,7 @@ export default {
 
     async created() {
         const id = this.$route.params.id;
-        if (id) {
+        if (id && this.isAuthenticated) {
             try {
                 await this.orderStore.fetchOrder(id);
             } catch (error) {

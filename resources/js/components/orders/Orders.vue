@@ -31,7 +31,7 @@
                                 <h5 class="mb-0">{{ statusLabel(status) }}</h5>
                                 <span class="badge bg-secondary">{{ ordersGroup.length }}</span>
                             </div>
-                            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                            <div class="card-body" style="max-height: 500px; overflow-y: auto;">
                                 <div v-for="order in ordersGroup" :key="order.id" class="card mb-2">
                                     <div class="card-body py-2">
                                         <div class="d-flex justify-content-between align-items-start">
@@ -44,6 +44,13 @@
                                                 <small class="text-muted">
                                                     {{new Date(order.created_at).toLocaleString()}}
                                                 </small>
+                                                <br>
+                                                <button
+                                                    class="btn btn-sm btn-outline-secondary mt-1"
+                                                    @click="viewOrder(order.id)"
+                                                >
+                                                    Ver detalhes
+                                                </button>
                                             </div>
                                             <div class="ms-auto d-flex flex-column align-items-end">
                                                 <button
