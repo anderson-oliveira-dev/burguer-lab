@@ -264,6 +264,7 @@ export default {
 
             try {
                 const { name, email, password, password_confirmation, agree } = this.registerForm;
+                const { phone, address } = this.form;
 
                 if (!name || !email || !password || !password_confirmation) {
                     throw new Error('Preencha todos os campos de cadastro.');
@@ -281,6 +282,8 @@ export default {
                 await this.authStore.register({
                     name,
                     email,
+                    phone,
+                    address,
                     password,
                     password_confirmation,
                 });

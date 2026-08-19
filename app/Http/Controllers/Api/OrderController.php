@@ -67,9 +67,9 @@ class OrderController extends Controller
             $order->user_id = $user->id;
             $order->type = $validated['type'];
             $order->address = $validated['type'] === 'delivery' ? $validated['address'] : null;
-            $order->phone = $user->phone; // pré-preenche com o telefone do usuário
+            $order->phone = $user->phone;
             $order->payment_method = $validated['payment_method'];
-            $order->status = 'awaiting_confirmation'; // sempre começa assim
+            $order->status = 'awaiting_confirmation';
             $order->delivery_fee = $validated['delivery_fee'] ?? 0;
             $order->observations = $validated['observations'] ?? null;
             $order->total_price = 0;

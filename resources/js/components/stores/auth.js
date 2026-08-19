@@ -64,6 +64,9 @@ export const useAuthStore = defineStore('auth', {
                 this.token = response.data.token;
                 localStorage.setItem('auth_token', this.token);
 
+                const cartStore = useCartStore();
+                await cartStore.syncCart();
+
                 notifySuccess('Cadastro realizado com sucesso!');
                 return true;
             } catch (error) {
