@@ -1,27 +1,22 @@
 <?php
-// app/Http/Controllers/Api/OrderController.php
 
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Cart; // se você tiver model Cart
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
-    /**
-     * Listar pedidos do usuário autenticado (cliente) ou todos (admin)
-     */
     public function index(Request $request)
     {
         $user = $request->user();
 
         if ($user->type === 'admin') {
-            // Admin pode filtrar por status via query param
             $query = Order::with('items.product', 'user');
             if ($request->has('status')) {
                 $query->where('status', $request->status);
@@ -29,7 +24,6 @@ class OrderController extends Controller
             return response()->json($query->orderBy('created_at', 'desc')->get());
         }
 
-        // Cliente vê apenas seus pedidos
         $orders = Order::with('items.product')
                     ->where('user_id', $user->id)
                     ->orderBy('created_at', 'desc')
@@ -38,14 +32,10 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    /**
-     * Detalhes de um pedido específico
-     */
     public function show(Request $request, $id)
     {
         $order = Order::with('items.product', 'user')->findOrFail($id);
 
-        // Verifica se o usuário tem permissão (admin ou dono do pedido)
         if ($request->user()->type !== 'admin' && $order->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -53,14 +43,10 @@ class OrderController extends Controller
         return response()->json($order);
     }
 
-    /**
-     * Cria um novo pedido a partir do carrinho atual do usuário
-     */
     public function store(Request $request)
     {
         $user = $request->user();
 
-        // Valida os dados do checkout
         $validated = $request->validate([
             'type'            => ['required', Rule::in(['delivery', 'pickup'])],
             'address'         => 'required_if:type,delivery|nullable|string|max:255',
@@ -69,17 +55,14 @@ class OrderController extends Controller
             'delivery_fee'    => 'nullable|numeric|min:0',
         ]);
 
-        // Busca o carrinho do usuário
         $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
         if (!$cart || $cart->items->isEmpty()) {
             return response()->json(['message' => 'Carrinho vazio'], 422);
         }
 
-        // Inicia transação para garantir consistência
         DB::beginTransaction();
 
         try {
-            // Cria o pedido
             $order = new Order();
             $order->user_id = $user->id;
             $order->type = $validated['type'];
@@ -89,13 +72,11 @@ class OrderController extends Controller
             $order->status = 'awaiting_confirmation'; // sempre começa assim
             $order->delivery_fee = $validated['delivery_fee'] ?? 0;
             $order->observations = $validated['observations'] ?? null;
-            // O total será calculado a partir dos itens
             $order->total_price = 0;
             $order->save();
 
             $total = 0;
 
-            // Copia cada item do carrinho para order_items
             foreach ($cart->items as $cartItem) {
                 $extras = $cartItem->extras ?? [];
                 $extrasTotal = collect($extras)->sum('price') ?? 0;
@@ -114,16 +95,13 @@ class OrderController extends Controller
                 $total += $subtotal;
             }
 
-            // Atualiza o total do pedido (incluindo taxa de entrega)
             $order->total_price = $total + $order->delivery_fee;
             $order->save();
 
-            // Limpa o carrinho após criar o pedido
             $cart->items()->delete();
 
             DB::commit();
 
-            // Retorna o pedido criado com seus itens
             $order->load('items.product');
 
             return response()->json([
@@ -133,13 +111,10 @@ class OrderController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            throw $e; // ou retornar erro 500 com mensagem
+            throw $e;
         }
     }
 
-    /**
-     * Atualiza o status do pedido (apenas admin)
-     */
     public function updateStatus(Request $request, $id)
     {
         $user = $request->user();
@@ -167,21 +142,15 @@ class OrderController extends Controller
         ]);
     }
 
-    /**
-     * Cancelar pedido (pode ser feito pelo admin ou pelo próprio cliente)
-     * Vamos permitir cancelar apenas se estiver 'awaiting_confirmation' ou 'preparing'
-     */
     public function cancel(Request $request, $id)
     {
         $order = Order::findOrFail($id);
         $user = $request->user();
 
-        // Admin ou dono podem cancelar
         if ($user->type !== 'admin' && $order->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Só pode cancelar se ainda não foi entregue
         if (!in_array($order->status, ['awaiting_confirmation', 'preparing'])) {
             return response()->json(['message' => 'Pedido não pode ser cancelado nesse estágio'], 422);
         }
