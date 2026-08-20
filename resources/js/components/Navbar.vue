@@ -3,7 +3,11 @@
         <header class="p-3 mb-3 border-bottom border-primary-subtle">
             <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                    <RouterLink class="navbar-brand link-body-emphasis text-decoration-none mx-2" to="/">
+                    <RouterLink
+                        class="navbar-brand link-body-emphasis text-decoration-none mx-2 d-flex align-items-center flex-nowrap"
+                        to="/"
+                    >
+                        <img src="/images/icon.png" alt="BurguerLab" width="40" class="me-2 flex-shrink-0">
                         <span class="fs-4">BurguerLab</span>
                     </RouterLink>
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
