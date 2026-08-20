@@ -9,7 +9,7 @@
             Entrar
         </button>
         <div v-else-if="user" class="dropdown" ref="dropdownContainer">
-            <a href="#" class="btn d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" class="btn d-block link-body-emphasis text-decoration-none dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
                 Olá, {{ user.name }} 👤
             </a>
             <ul class="dropdown-menu text-small" style="">

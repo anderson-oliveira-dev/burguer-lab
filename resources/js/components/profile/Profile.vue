@@ -1,6 +1,6 @@
 <template>
     <div class="container py-4">
-        <h1 class="mb-4">Perfil</h1>
+        <h1 class="mb-4">👤 Perfil</h1>
         <div v-if="isAuthenticated">
 
         </div>
