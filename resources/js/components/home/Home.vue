@@ -8,16 +8,20 @@
             </div>
         </div>
 
-        <div v-else class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-4">
-            <div v-if="products.length" v-for="product in products" :key="product.id" class="col">
-                <ProductCard
-                    :product="product"
-                    @open-modal="openProductModal"
-                />
+        <div v-else>
+            <div v-if="!Object.keys(groupedProducts).length" class="alert alert-warning" role="alert">
+                Sem produtos disponíveis
             </div>
-            <div v-else>
-                <div class="alert alert-warning" role="alert">
-                    Sem produtos disponíveis
+
+            <div v-else v-for="(products, category) in groupedProducts" :key="category">
+                <h2 class="mt-4 mb-3">{{ category || 'Sem categoria' }}</h2>
+                <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-4">
+                    <div v-for="product in products" :key="product.id" class="col">
+                        <ProductCard
+                            :product="product"
+                            @open-modal="openProductModal"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -31,18 +35,17 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
+import { mapState, mapActions } from 'pinia';
+import { useProductStore } from '../stores/productStore.js';
 import ProductCard from './ProductCard.vue';
 import ProductPlaceholder from './placeholders/ProductPlaceholder.vue';
-import ProductModal from './ProductModal.vue'; // ← importe o modal
-
-import { useProductStore } from '../stores/productStore.js';
-import { mapState, mapActions } from 'pinia';
-import { ref } from 'vue';
+import ProductModal from './ProductModal.vue';
 
 export default {
     components: {
-        ProductPlaceholder,
         ProductCard,
+        ProductPlaceholder,
         ProductModal,
     },
     setup() {
@@ -62,6 +65,17 @@ export default {
     },
     computed: {
         ...mapState(useProductStore, ['products', 'loading']),
+
+        groupedProducts() {
+            return this.products.reduce((acc, product) => {
+                const category = product.category || 'Sem categoria';
+                if (!acc[category]) {
+                    acc[category] = [];
+                }
+                acc[category].push(product);
+                return acc;
+            }, {});
+        }
     },
     mounted() {
         this.fetchProducts();

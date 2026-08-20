@@ -7,6 +7,11 @@ export const useProductStore = defineStore('product', {
         products: [],
         loading: false,
     }),
+    getters: {
+        getByCategory: (state) => (category) => {
+            return state.products.filter(product => product.category === category);
+        },
+    },
     actions: {
         async fetchProducts() {
             this.loading = true;

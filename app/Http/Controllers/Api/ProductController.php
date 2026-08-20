@@ -16,7 +16,6 @@ class ProductController extends Controller
     {
         $products = Product::with('category')
             ->available()
-            ->orderBy('name')
             ->get();
 
         return ProductResource::collection($products);
