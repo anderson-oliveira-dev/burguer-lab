@@ -26,6 +26,7 @@
 import { Button, Dropdown } from 'bootstrap';
 import { useAuthStore } from '../stores/auth';
 import { useModalStore } from '../stores/modal';
+import { confirm } from '../services/dialog';
 
 export default {
     data() {

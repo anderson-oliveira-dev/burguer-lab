@@ -90,6 +90,11 @@ export default {
     methods: {
         closeModal() {
             this.modalInstance?.hide();
+
+            this.form = {
+                login: '',
+                password: ''
+            };
         },
         async handleLogin() {
             this.loading = true;
