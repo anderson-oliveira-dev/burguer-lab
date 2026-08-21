@@ -10,6 +10,8 @@ import Register from '../components/login/Register.vue'
 import Checkout from '../components/orders/Checkout.vue'
 import OrderDetails from '../components/orders/OrderDetails.vue'
 import ChangePassword from '../components/profile/ChangePassword.vue'
+import Forbidden from '../components/common/Forbidden.vue'
+import NotFound from '../components/common/NotFound.vue'
 
 const routes = [
     {
@@ -34,7 +36,10 @@ const routes = [
                 name: 'order-detail',
                 component: OrderDetails,
                 meta: { requiresAuth: true },
-            }
+                //meta: { requiresAuth: true, roles: ['client', 'admin'] } como usar
+            },
+            { path: '/403', name: 'forbidden', component: Forbidden },
+            { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound }
         ]
     },
     { path: '/register', name: 'register', component: Register }
@@ -43,6 +48,32 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
-})
+});
+
+router.beforeEach(async (to, from, next) => {
+    const authStore = useAuthStore();
+
+    if (!authStore.user && authStore.token) {
+        await authStore.fetchUser();
+    }
+
+    const isAuthenticated = authStore.isAuthenticated;
+    const userRole = authStore.userRole;
+
+    if (to.meta.requiresAuth && !isAuthenticated) {
+        return next({ name: 'home' });
+    }
+
+    if (to.meta.roles) {
+        if (!isAuthenticated) {
+            return next({ name: 'home' });
+        }
+        if (!to.meta.roles.includes(userRole)) {
+            return next({ name: 'forbidden' });
+        }
+    }
+
+    next();
+});
 
 export default router
