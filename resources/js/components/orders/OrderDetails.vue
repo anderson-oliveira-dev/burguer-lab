@@ -192,7 +192,7 @@ export default {
             return this.orderStore.currentOrder;
         },
         isManager() {
-            return this.userRole === 'admin' || this.userRole === 'worker';
+            return this.authStore.userRole === 'admin' || this.authStore.userRole === 'worker';
         },
         canAct() {
             if (!this.order) return false;

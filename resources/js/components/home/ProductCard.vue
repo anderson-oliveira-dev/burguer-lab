@@ -6,12 +6,15 @@
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text flex-grow-1">{{ product.description }}</p>
             <p class="card-text"><strong>R$ {{ product.price.toFixed(2) }}</strong></p>
-            <button class="btn btn-primary mt-auto" @click="openModal">Comprar</button>
+            <button v-if="!isManager" class="btn btn-primary mt-auto" @click="openModal">Comprar</button>
+            <button v-if="isManager" class="btn btn-primary mt-auto" @click="$router.push(`/products/${product.id}`)">Editar</button>
         </div>
     </div>
 </template>
 
 <script>
+import { useAuthStore } from '../stores/auth';
+
 export default {
     props: {
         product: {
@@ -20,6 +23,14 @@ export default {
         },
     },
     emits: ['open-modal'],
+    computed: {
+        authStore() {
+            return useAuthStore();
+        },
+        isManager() {
+            return this.authStore.userRole === 'admin' || this.authStore.userRole === 'worker';
+        },
+    },
     methods: {
         openModal() {
             this.$emit('open-modal', this.product);

@@ -13,6 +13,7 @@ import ChangePassword from '../components/profile/ChangePassword.vue'
 import Forbidden from '../components/common/Forbidden.vue'
 import NotFound from '../components/common/NotFound.vue'
 import Management from '../components/management/Management.vue'
+import ProductForm from '../components/management/ProductForm.vue'
 
 const routes = [
     {
@@ -31,7 +32,12 @@ const routes = [
                 component: ChangePassword,
                 meta: { requiresAuth: true },
             },
-
+            {
+                path: '/products/:id?',
+                name: 'ProductForm',
+                component: ProductForm,
+                props: true,
+            },
             { path: 'checkout', name: 'checkout', component: Checkout },
             {
                 path: '/orders/:id',

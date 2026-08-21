@@ -25,5 +25,35 @@ export const useProductStore = defineStore('product', {
                 this.loading = false;
             }
         },
+        async fetchProductById(id) {
+            try {
+                const response = await api.get(`/products/${id}`);
+                return response.data.data;
+            } catch (error) {
+                console.error('Erro ao buscar produto:', error);
+                notifyError('Erro ao buscar produto.');
+            }
+        },
+        async createProduct(data) {
+            try{
+                const response = await api.post('/products', data);
+                this.products.push(response.data.data);
+                return response.data.data;
+            } catch (error) {
+                console.error('Erro ao registrar produto:', error);
+                notifyError('Erro ao registrar produto.');
+            }
+        },
+        async updateProduct(id, data) {
+            try{
+                const response = await api.put(`/products/${id}`, data);
+                const index = this.products.findIndex(p => p.id === id);
+                if (index !== -1) this.products[index] = response.data.data;
+                return response.data.data;
+            } catch (error) {
+                console.error('Erro ao atualizar produto:', error);
+                notifyError('Erro ao atualizar produto.');
+            }
+        },
     },
 });
