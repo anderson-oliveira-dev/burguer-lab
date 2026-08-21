@@ -12,6 +12,7 @@ import OrderDetails from '../components/orders/OrderDetails.vue'
 import ChangePassword from '../components/profile/ChangePassword.vue'
 import Forbidden from '../components/common/Forbidden.vue'
 import NotFound from '../components/common/NotFound.vue'
+import Management from '../components/management/Management.vue'
 
 const routes = [
     {
@@ -22,6 +23,7 @@ const routes = [
             { path: 'home', name: 'home', component: Home },
             { path: 'orders', name: 'orders', component: Orders },
             { path: 'cart', name: 'cart', component: Cart, meta: { roles: ['client'], allowGuest: true }},
+            { path: 'management', name: 'management', component: Management, meta: { allowGuest: false, roles: ['admin'] }},
             { path: 'profile', name: 'profile', component: Profile },
             {
                 path: '/profile/change-password/',
@@ -69,7 +71,7 @@ router.beforeEach(async (to, from, next) => {
             return next();
         }
         if (!isAuthenticated) {
-            return next({ name: 'home' });
+            return next({ name: 'forbidden' });
         }
         if (!to.meta.roles.includes(userRole)) {
             return next({ name: 'forbidden' });

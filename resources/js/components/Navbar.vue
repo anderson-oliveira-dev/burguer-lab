@@ -23,6 +23,9 @@
                                 <span class="badge text-bg-primary">{{ cartCount }}</span>
                             </RouterLink>
                         </li>
+                        <li v-if="userRole === 'admin'">
+                            <RouterLink active-class="active" to="/management" class="nav-link px-2 link-body-emphasis">Gerenciamento</RouterLink>
+                        </li>
                         <li>
                             <RouterLink active-class="active" to="/profile" class="nav-link px-2 link-body-emphasis">Perfil</RouterLink>
                         </li>
