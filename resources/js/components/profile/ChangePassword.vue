@@ -1,7 +1,7 @@
 <template>
     <div class="container py-4">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-5 mt-4">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Alterar Senha</h5>
