@@ -21,7 +21,7 @@ const routes = [
             { path: '', redirect: '/home' },
             { path: 'home', name: 'home', component: Home },
             { path: 'orders', name: 'orders', component: Orders },
-            { path: 'cart', name: 'cart', component: Cart },
+            { path: 'cart', name: 'cart', component: Cart, meta: { roles: ['client'], allowGuest: true }},
             { path: 'profile', name: 'profile', component: Profile },
             {
                 path: '/profile/change-password/',
@@ -65,6 +65,9 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.meta.roles) {
+        if (to.meta.allowGuest && !isAuthenticated) {
+            return next();
+        }
         if (!isAuthenticated) {
             return next({ name: 'home' });
         }

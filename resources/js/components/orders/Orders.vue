@@ -15,12 +15,17 @@
 
             <div v-else-if="!orderStore.orders.length" class="text-center py-5">
                 <h3>Nenhum pedido encontrado</h3>
-                <p class="text-muted">Faça seu primeiro pedido agora mesmo!</p>
-                <router-link to="/" class="btn btn-primary">Ver cardápio</router-link>
+                <div v-if="isManager">
+                    <p class="text-muted">Faça seu primeiro pedido agora mesmo!</p>
+                    <router-link to="/" class="btn btn-primary">Ver cardápio</router-link>
+                </div>
+                <div v-else>
+                    <p class="text-muted">Ainda não há pedidos disponíveis!</p>
+                </div>
             </div>
 
             <div v-else>
-                <div v-if="isAdmin" class="row">
+                <div v-if="isManager" class="row">
                     <div
                         v-for="(ordersGroup, status) in groupedOrders"
                         :key="status"
@@ -161,8 +166,8 @@ export default {
         user() {
             return this.authStore.user;
         },
-        isAdmin() {
-            return this.user && this.user.type === 'admin';
+        isManager() {
+            return this.userRole === 'admin' || this.userRole === 'worker';
         },
 
         orderStore() {
@@ -170,7 +175,7 @@ export default {
         },
 
         groupedOrders() {
-            if (!this.isAdmin) return {};
+            if (!this.isManager) return {};
             const groups = {};
             for (const order of this.orderStore.orders) {
                 const status = order.status;

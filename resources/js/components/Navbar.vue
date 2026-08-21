@@ -12,12 +12,12 @@
                     </RouterLink>
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                         <li>
-                            <RouterLink active-class="active" to="/" class="nav-link px-2 link-body-emphasis">Início</RouterLink>
+                            <RouterLink active-class="active" to="/" class="nav-link px-2 link-body-emphasis">Cardápio</RouterLink>
                         </li>
                         <li>
                             <RouterLink active-class="active" to="/orders" class="nav-link px-2 link-body-emphasis">Pedidos</RouterLink>
                         </li>
-                        <li>
+                        <li v-if="userRole === 'client' || !isAuthenticated">
                             <RouterLink active-class="active" to="/cart" class="nav-link px-2 link-body-emphasis">
                                 Carrinho
                                 <span class="badge text-bg-primary">{{ cartCount }}</span>
@@ -38,6 +38,7 @@
 
 <script>
 import LoginButton from './login/LoginButton.vue';
+import { useAuthStore } from './stores/auth.js';
 import { useCartStore } from './stores/cartStore.js';
 
 export default {
@@ -51,6 +52,12 @@ export default {
     computed: {
         cartCount() {
             return useCartStore().itemCount;
+        },
+        userRole() {
+            return useAuthStore().userRole;
+        },
+        isAuthenticated() {
+            return useAuthStore().isAuthenticated;
         }
     },
     mounted() {

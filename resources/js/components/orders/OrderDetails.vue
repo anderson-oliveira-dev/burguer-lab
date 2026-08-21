@@ -70,7 +70,7 @@
                         </div>
                         <div class="card-body">
                             <div class="d-flex flex-wrap gap-2">
-                                <div v-if="isAdmin">
+                                <div v-if="isManager">
                                     <button
                                         v-if="order.status === 'awaiting_confirmation'"
                                         class="btn btn-success"
@@ -191,8 +191,8 @@ export default {
         order() {
             return this.orderStore.currentOrder;
         },
-        isAdmin() {
-            return this.authStore.user && this.authStore.user.type === 'admin';
+        isManager() {
+            return this.userRole === 'admin' || this.userRole === 'worker';
         },
         canAct() {
             if (!this.order) return false;
