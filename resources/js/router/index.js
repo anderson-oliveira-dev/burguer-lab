@@ -9,6 +9,7 @@ import Profile from '../components/profile/Profile.vue'
 import Register from '../components/login/Register.vue'
 import Checkout from '../components/orders/Checkout.vue'
 import OrderDetails from '../components/orders/OrderDetails.vue'
+import ChangePassword from '../components/profile/ChangePassword.vue'
 
 const routes = [
     {
@@ -20,6 +21,12 @@ const routes = [
             { path: 'orders', name: 'orders', component: Orders },
             { path: 'cart', name: 'cart', component: Cart },
             { path: 'profile', name: 'profile', component: Profile },
+            {
+                path: '/profile/change-password/',
+                name: 'change-password',
+                component: ChangePassword,
+                meta: { requiresAuth: true },
+            },
 
             { path: 'checkout', name: 'checkout', component: Checkout },
             {
@@ -32,10 +39,6 @@ const routes = [
     },
     { path: '/register', name: 'register', component: Register }
 ];
-
-// Quando tiver páginas que precisam de autenticação
-//{ path: '/products', component: () => import('...'), meta: { requiresAuth: true } },
-
 
 const router = createRouter({
     history: createWebHistory(),

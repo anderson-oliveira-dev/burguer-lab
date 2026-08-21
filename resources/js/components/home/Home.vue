@@ -14,7 +14,7 @@
             </div>
 
             <div v-else v-for="(products, category) in groupedProducts" :key="category">
-                <h2 class="mt-4 mb-3">{{ category || 'Sem categoria' }}</h2>
+                <h3 class="mt-4 mb-3">{{ category || 'Sem categoria' }}</h3>
                 <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-4">
                     <div v-for="product in products" :key="product.id" class="col">
                         <ProductCard

@@ -81,5 +81,42 @@ export const useAuthStore = defineStore('auth', {
                 notifyError('Sessão expirada. Faça login novamente.');
             }
         },
+        async updateUser(userData) {
+            try {
+                const response = await api.put('/user', userData);
+                this.user = response.data;
+                notifySuccess('Dados atualizados!');
+                return { success: true, data: response.data };
+            } catch (error) {
+                if (error.response && error.response.data.errors) {
+                    const errors = error.response.data.errors;
+                    notifyError(Object.values(errors).flat().join(' '));
+                } else if (error.response && error.response.data.message) {
+                    notifyError(error.response.data.message)
+                } else {
+                    notifyError(error.message || 'Erro ao atualizar perfil.');
+                }
+                console.error('Erro ao atualizar perfil:', error);
+                throw error;
+            }
+        },
+        async updatePassword(passwordData) {
+            try {
+                await api.put('/user/password', passwordData);
+                notifySuccess('Senha atualizada!');
+                return { success: true };
+            } catch (error) {
+                if (error.response && error.response.data.errors) {
+                    const errors = error.response.data.errors;
+                    notifyError(Object.values(errors).flat().join(' '));
+                } else if (error.response && error.response.data.message) {
+                    notifyError(error.response.data.message)
+                } else {
+                    notifyError(error.message || 'Erro ao alterar senha.');
+                }
+                console.error('Erro ao alterar senha:', error);
+                throw error;
+            }
+        }
     },
 });
